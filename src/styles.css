@@ -1,1 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  margin: 0;
+  font-family: 'Georgia', cursive;
+  background-color: #1a4da5; /* Fondo azul profundo */
+  color: #000;
+}
+
+a {
+  color: #d6c284;
+  text-decoration: none;
+  font-style: italic;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
