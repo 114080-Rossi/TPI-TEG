@@ -1,14 +1,10 @@
-import { Component } from '@angular/core';
-import {DummyFormatterPipe} from './shared/pipes/dummy-formatter.pipe';
-import {DummyType} from './core/enums/dummy-type';
-import {HighlightDummyDirective} from './shared/directives/highlight-dummy.directive';
-import {DummyComponent} from './features/dummy/dummy/dummy.component';
+import {Component} from '@angular/core';
+import {RouterModule} from '@angular/router';
 
 @Component({
+  standalone: true,
   selector: 'app-root',
-  imports: [DummyComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  imports: [RouterModule],
+  template: `<router-outlet></router-outlet>`
 })
-export class AppComponent {
-}
+export class AppComponent {}
