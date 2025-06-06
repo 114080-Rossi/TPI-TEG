@@ -1,0 +1,30 @@
+<h2>MAPA DEL TEG</h2>
+
+
+<object id="svgMap" type="image/svg+xml" data="assets/board-TEG_final.svg" width="100%" height="600px"></object>
+
+<div style="margin-top: 20px;">
+  <div *ngIf="countries.length">
+    <button (click)="seleccionarPorId(11)">Seleccionar Argentina</button>
+    <button (click)="seleccionarPorId(1)">Seleccionar Canadá</button>
+  </div>
+</div>
+
+<!-- Selectores -->
+<select [(ngModel)]="selectedOriginId">
+  <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
+</select>
+
+<select [(ngModel)]="selectedDestinationId">
+  <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
+</select>
+
+<button (click)="mostrarCamino()">🧭 Mostrar camino</button>
+
+<!-- Resultado -->
+<div *ngIf="caminoActual.length">
+  <h3>Camino encontrado:</h3>
+  <ul>
+    <li *ngFor="let paso of caminoActual">{{ paso.name }}</li>
+  </ul>
+</div>

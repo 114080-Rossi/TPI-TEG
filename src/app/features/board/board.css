@@ -1,0 +1,4 @@
+svg path {
+  pointer-events: all;
+  cursor: pointer;
+}
