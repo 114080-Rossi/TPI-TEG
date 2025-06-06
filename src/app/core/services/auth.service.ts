@@ -30,5 +30,6 @@ export class AuthService {
   register(data: any): Observable<any> {
     return this.http.post(`${this.BASE_URL}/players/register`, data);
   }
+
 }
 
