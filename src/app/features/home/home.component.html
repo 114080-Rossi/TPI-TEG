@@ -1,6 +1,6 @@
 <div class="game-menu-container">
   <div class="header">
-    <h1>Menú del Juego</h1>
+    <h1>New GAME</h1>
   </div>
 
   <!-- Botones principales -->
@@ -22,46 +22,46 @@
 
   <!-- Formulario para nuevo juego -->
   <div class="new-game-form" *ngIf="showNewGameForm">
-    <h2>Configurar Nuevo Juego</h2>
+    <h2>Set Up New Game</h2>
 
     <form [formGroup]="newGameForm" (ngSubmit)="onStartNewGame()">
       <div class="form-group">
-        <label for="color">Color del Jugador:</label>
+        <label for="color">Player color:</label>
         <select
           id="color"
           formControlName="color"
           class="form-control"
           [class.error]="newGameForm.get('color')?.invalid && newGameForm.get('color')?.touched">
-          <option value="">Selecciona un color</option>
+          <option value="">Select a color</option>
           <option *ngFor="let color of colorOptions" [value]="color.value">
             {{ color.label }}
           </option>
         </select>
         <div class="error-message" *ngIf="newGameForm.get('color')?.invalid && newGameForm.get('color')?.touched">
-          Por favor selecciona un color
+          Please select a color
         </div>
       </div>
 
       <div class="form-group">
-        <label for="difficulty">Dificultad:</label>
+        <label for="difficulty">Bot Difficulty:</label>
         <select
           id="difficulty"
           formControlName="difficulty"
           class="form-control"
           [class.error]="newGameForm.get('difficulty')?.invalid && newGameForm.get('difficulty')?.touched">
-          <option value="">Selecciona la dificultad</option>
+          <option value="">Select difficulty</option>
           <option *ngFor="let diff of difficultyOptions" [value]="diff.value">
             {{ diff.label }}
           </option>
         </select>
         <div class="error-message" *ngIf="newGameForm.get('difficulty')?.invalid && newGameForm.get('difficulty')?.touched">
-          Por favor selecciona una dificultad
+          Please select a difficulty
         </div>
       </div>
 
       <div class="form-info">
-        <p><strong>Fecha:</strong> </p>
-        <p><strong>Estado:</strong> En progreso</p>
+        <p><strong>Date:</strong> {{ currentDate | date:'dd/MM/yyyy HH:mm' }}</p>
+        <p><strong>Status:</strong> ESPERANDO JUGADORES</p>
       </div>
 
       <div class="form-actions">
@@ -69,7 +69,7 @@
           type="submit"
           class="btn btn-success"
           [disabled]="newGameForm.invalid">
-          Iniciar Juego
+          Start Game
         </button>
         <button
           type="button"

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 // Interfaces para los DTO
 export interface NewGameRequestDTO {
   gameDifficulty: number;
-  createdByPlayerId: number;
+  colorPlayer: number;
 }
 
 export interface NewGameResponseDTO {
@@ -45,24 +45,5 @@ export class GameService {
     );
   }
 
-  // /**
-  //  * Obtener partidas disponibles para cargar
-  //  * Este endpoint lo tendrás que crear en tu backend
-  //  */
-  // getAvailableGames(): Observable<NewGameResponseDTO[]> {
-  //   return this.http.get<NewGameResponseDTO[]>(
-  //     `${this.apiUrl}/available`,
-  //     this.httpOptions
-  //   );
-  // }
-  //
-  // /**
-  //  * Cargar una partida específica
-  //  */
-  // loadGame(gameId: number): Observable<NewGameResponseDTO> {
-  //   return this.http.get<NewGameResponseDTO>(
-  //     `${this.apiUrl}/${gameId}`,
-  //     this.httpOptions
-  //   );
-  // }
+
 }
