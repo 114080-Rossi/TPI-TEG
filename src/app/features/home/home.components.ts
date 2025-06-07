@@ -11,6 +11,7 @@ interface GameConfig {
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -25,6 +26,7 @@ export class HomeComponent {
   showLoadGameList = false
   newGameForm: FormGroup
   savedGames: GameConfig[] = []
+  currentDate: Date = new Date();
 
   colorOptions = [
     { value: "red", label: "Rojo" },
@@ -46,6 +48,7 @@ export class HomeComponent {
       color: ["", Validators.required],
       difficulty: ["", Validators.required]
     })
+
     this.loadSavedGames()
   }
 
@@ -65,11 +68,19 @@ export class HomeComponent {
       medium: 2,
       expert: 3
     };
+    const colorMap: { [key: string]: number } = {
+      red: 1,
+      blue: 2,
+      green: 3,
+      yellow: 4,
+      purple: 5
+    }
     const selectedDifficulty = this.newGameForm.value.difficulty;
+    const selectedColor = this.newGameForm.value.color;
 
     const newGameRequest: NewGameRequestDTO = {
       gameDifficulty: difficultyMap[selectedDifficulty],
-      createdByPlayerId: 1 // Ajusta según corresponda
+      colorPlayer: colorMap[selectedColor]
     };
 
       this.gameService.createNewGame(newGameRequest).subscribe({
@@ -79,7 +90,6 @@ export class HomeComponent {
 
       this.newGameForm.reset();
       this.showNewGameForm = false;
-
   }
 
   onSelectSavedGame(game: GameConfig) {
@@ -129,4 +139,6 @@ export class HomeComponent {
   getDifficultyClass(difficulty: string): string {
     return `difficulty-${difficulty}`
   }
+
+
 }
