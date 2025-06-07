@@ -25,21 +25,35 @@ export class BoardComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     const svgElement = document.getElementById('svgMap') as HTMLObjectElement;
 
-    svgElement.addEventListener('load', () => {
-      this.svgDoc = svgElement.contentDocument;
-      if (!this.svgDoc) {
-        console.error('No se pudo acceder al contenido del SVG.');
+
+      if (!svgElement) {
+        console.error('❌ No se encontró el elemento SVG');
         return;
       }
 
-      this.boardService.getBoard().subscribe((response) => {
-        this.countries = response.countries ?? response;
-        console.log("CARGADOS:", this.countries);
-        this.pintarMapa();
-      });
-    });
+      const onLoad = () => {
+        this.svgDoc = svgElement.contentDocument;
+        if (!this.svgDoc) {
+          console.error('❌ No se pudo acceder al contenido del SVG.');
+          return;
+        }
 
+        this.boardService.getBoard().subscribe((response) => {
+          this.countries = response.countries ?? response;
+          console.log("CARGADOS:", this.countries);
+          console.log("✅ CARGADOS:", this.countries);
+          this.pintarMapa();
+        });
+      };
+
+    if (svgElement.contentDocument?.rootElement) {
+      console.warn('⚠️ SVG ya estaba cargado al iniciar');
+      onLoad();
+    } else {
+      svgElement.addEventListener('load', onLoad);
+    }
   }
+
 
 
   mostrarCamino(): void {
@@ -70,11 +84,11 @@ export class BoardComponent implements AfterViewInit {
       const element = this.svgDoc!.getElementById(String(country.id));
 
       if (element) {
-        element.setAttribute('fill', '#FFD700'); // Amarillo
+        element.setAttribute('fill', '#FFD700');
       }
 
       index++;
-    }, 500); // 500ms entre país y país
+    }, 500);
   }
 
 
@@ -83,12 +97,11 @@ export class BoardComponent implements AfterViewInit {
 
     this.countries.forEach(country => {
       const element = this.svgDoc!.getElementById(String(country.id));
-
       if (element) {
 
+        console.log(`✅ Elemento encontrado para país ${country.name} con ID: ${country.id}`);
         element.setAttribute('fill', 'lightblue');
         element.style.cursor = 'pointer';
-
 
         element.addEventListener('click', () => {
           console.log(`🖱️ País seleccionado:`, {
@@ -102,18 +115,18 @@ export class BoardComponent implements AfterViewInit {
           this.seleccionarPorId(country.id);
         });
 
-
         element.addEventListener('mouseenter', () => {
           if (country.id !== this.selectedCountryId) {
             element.setAttribute('fill', '#87CEEB');
           }
         });
-
         element.addEventListener('mouseleave', () => {
           if (country.id !== this.selectedCountryId) {
             element.setAttribute('fill', 'lightblue');
           }
         });
+      } else {
+        console.warn(`❌ No se encontró el elemento con ID: ${country.id}`);
       }
     });
   }
@@ -130,7 +143,6 @@ export class BoardComponent implements AfterViewInit {
         if (country.id === this.selectedCountryId) {
           element.setAttribute('style', 'fill: red; cursor: pointer;');
         }
-
         else if (
           this.selectedCountryId !== null &&
           this.countries.find(c => c.id === this.selectedCountryId)?.borderIds.includes(country.id)
