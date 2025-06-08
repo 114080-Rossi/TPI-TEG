@@ -9,14 +9,14 @@
       class="btn btn-primary btn-large"
       (click)="onNewGame()">
       <i class="icon-plus"></i>
-      Nuevo Juego
+      New Game
     </button>
 
     <button
       class="btn btn-secondary btn-large"
       (click)="onLoadGame()">
       <i class="icon-folder"></i>
-      Cargar Juego
+      Load Game
     </button>
   </div>
 
@@ -80,10 +80,11 @@
       </div>
     </form>
   </div>
+<!--  <form [formGroup]="newGameForm" (ngSubmit)="onStartNewGame()">-->
 
   <!-- Lista de juegos guardados -->
   <div class="load-game-list" *ngIf="showLoadGameList">
-    <h2>Cargar Juego</h2>
+    <h2>Load Game</h2>
 
     <div class="saved-games" *ngIf="savedGames.length > 0; else noGames">
       <div
@@ -92,23 +93,23 @@
         (click)="onSelectSavedGame(game)">
         <div class="game-info">
           <div class="game-header">
-            <span class="game-id">{{ game.id }}</span>
+            <span class="game-id">{{ game.gameId }}</span>
             <button
               class="btn-delete"
-              (click)="onDeleteSavedGame(game.id); $event.stopPropagation()">
+              (click)="onDeleteSavedGame(game.gameId); $event.stopPropagation()">
               ×
             </button>
           </div>
           <div class="game-details">
-            <span class="color-indicator" [ngClass]="getColorClass(game.color)"></span>
-            <span class="color-text">{{ game.color }}</span>
-            <span class="difficulty" [ngClass]="getDifficultyClass(game.difficulty)">
-              {{ game.difficulty }}
+<!--            <span class="color-indicator" [ngClass]="getColorClass(game.color)"></span>-->
+<!--            <span class="color-text">{{ game.color }}</span>-->
+            <span class="difficulty" [ngClass]="getDifficultyClass(game.gameDifficulty)">
+              {{ game.gameDifficulty }}
             </span>
           </div>
           <div class="game-meta">
             <span class="date"></span>
-            <span class="status">{{ game.status }}</span>
+<!--            <span class="status">{{ game.status }}</span>-->
           </div>
         </div>
       </div>
