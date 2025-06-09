@@ -81,53 +81,58 @@ export class BoardComponent implements AfterViewInit {
       }
 
       const country = camino[index];
-      const element = this.svgDoc!.getElementById(String(country.id));
+      const baseId = String(country.id);
 
-      if (element) {
-        element.setAttribute('fill', '#FFD700');
-      }
+      const elements = [
+        this.svgDoc!.getElementById(baseId),
+        this.svgDoc!.getElementById(`${baseId}b`)
+      ].filter(e => e !== null)
+        .map(e => e as unknown as SVGElement);
+
+
+      elements.forEach(el => {
+        el.setAttribute('fill', '#FFD700'); // Color dorado para marcar camino
+      });
 
       index++;
     }, 500);
   }
 
 
+
   pintarMapa(): void {
     if (!this.svgDoc) return;
 
     this.countries.forEach(country => {
-      const element = this.svgDoc!.getElementById(String(country.id));
-      if (element) {
+      const baseId = String(country.id);
+      const element = this.svgDoc!.getElementById(baseId);
+      const border = this.svgDoc!.getElementById(`${baseId}b`);
 
-        console.log(`✅ Elemento encontrado para país ${country.name} con ID: ${country.id}`);
-        element.setAttribute('fill', 'lightblue');
-        element.style.cursor = 'pointer';
+      [element, border].forEach(el => {
+        if (el) {
+          console.log(`✅ Elemento encontrado para país ${country.name} con ID: ${el.id}`);
+          el.setAttribute('fill', 'lightblue');
+          el.style.cursor = 'pointer';
 
-        element.addEventListener('click', () => {
-          console.log(`🖱️ País seleccionado:`, {
-            id: country.id,
-            name: country.name,
-            armies: country.armies,
-            continentId: country.continent.id,
-            borders: country.borderIds
+          el.addEventListener('click', () => {
+            this.seleccionarPorId(country.id);
           });
 
-          this.seleccionarPorId(country.id);
-        });
+          el.addEventListener('mouseenter', () => {
+            if (country.id !== this.selectedCountryId) {
+              el.setAttribute('fill', '#87CEEB');
+            }
+          });
 
-        element.addEventListener('mouseenter', () => {
-          if (country.id !== this.selectedCountryId) {
-            element.setAttribute('fill', '#87CEEB');
-          }
-        });
-        element.addEventListener('mouseleave', () => {
-          if (country.id !== this.selectedCountryId) {
-            element.setAttribute('fill', 'lightblue');
-          }
-        });
-      } else {
-        console.warn(`❌ No se encontró el elemento con ID: ${country.id}`);
-      }
+          el.addEventListener('mouseleave', () => {
+            if (country.id !== this.selectedCountryId) {
+              el.setAttribute('fill', 'lightblue');
+            }
+          });
+        } else {
+          console.warn(`❌ No se encontró el elemento con ID: ${el === element ? baseId : `${baseId}b`}`);
+        }
+      });
     });
   }
 
@@ -136,26 +141,28 @@ export class BoardComponent implements AfterViewInit {
     if (!this.svgDoc) return;
 
     this.countries.forEach((country) => {
-      const element = this.svgDoc!.getElementById(String(country.id));
+      const elements = [
+        this.svgDoc!.getElementById(country.id.toString()),
+        this.svgDoc!.getElementById(`${country.id}b`)
+      ].filter((e): e is HTMLElement => e !== null)
+        .map(e => e as unknown as SVGElement);
 
-      if (element) {
-
+      elements.forEach(el => {
         if (country.id === this.selectedCountryId) {
-          element.setAttribute('style', 'fill: red; cursor: pointer;');
-        }
-        else if (
+          el.setAttribute('style', 'fill: red; cursor: pointer;'); //El seleccionado es rojo
+        } else if (
           this.selectedCountryId !== null &&
-          this.countries.find(c => c.id === this.selectedCountryId)?.borderIds.includes(country.id)
+          this.countries.find(c => c.id === this.selectedCountryId)
+            ?.borderIds.includes(country.id)
         ) {
-          element.setAttribute('style', 'fill: orange; cursor: pointer;');
+          el.setAttribute('style', 'fill: orange; cursor: pointer;'); // Los borders son naranjas
+        } else {
+          el.setAttribute('style', 'fill: #b3b3b3; cursor: pointer;'); // el resto es gris
         }
-
-        else {
-          element.setAttribute('style', 'fill: #9be09e; cursor: pointer;');
-        }
-      }
+      });
     });
   }
+
 
   seleccionarPorId(id: number): void {
     console.log('🖱️ Selección del país con ID:', id);
