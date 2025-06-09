@@ -88,7 +88,7 @@ export class HomeComponent {
   onLoadGame() {
     this.showLoadGameList = true
     this.showNewGameForm = false
-    this.loadSavedGames()
+    // this.loadSavedGames()
   }
 
   onStartNewGame() {
