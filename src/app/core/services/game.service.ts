@@ -11,7 +11,6 @@ export interface NewGameRequestDTO {
 
 export interface NewGameResponseDTO {
   gameId: number;
-  gameDate: string;
   gameDifficulty: string;
   gameState: string;
   currentTurnPlayerId: number | null;
@@ -44,6 +43,11 @@ export class GameService {
       this.httpOptions
     );
   }
-
+  /**
+   * Cargar partida por ID
+   */
+  getGamesByPlayer(playerId: number): Observable<NewGameResponseDTO[]> {
+    return this.http.get<NewGameResponseDTO[]>(`${this.apiUrl}/byPlayer/${playerId}`);
+  }
 
 }
