@@ -4,6 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import {LoginComponent} from 'app/features/login/login.component';
 import {RegisterComponent} from 'app/features/register/register.component';
 import {HomeComponent} from 'app/features/home/home.components';
+import {BoardComponent} from 'app/features/board/boardComponent';
 import {AppComponent} from 'app/app.component';
 
 
@@ -11,6 +12,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'home', component: HomeComponent },
+  { path: 'board', component: BoardComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
 ];

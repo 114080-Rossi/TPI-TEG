@@ -1,4 +1,5 @@
 import {GameService, NewGameRequestDTO} from 'app/core/services/game.service';
+
 enum Colors {
   RED = 'RED',
   BLUE = 'BLUE',
@@ -27,6 +28,7 @@ enum TurnState {
   PAUSE = 'PAUSE',
   CANCELED = 'CANCELED'
 }
+
 interface GameConfig {
   gameId: number;
   gameDifficulty: DifficultyLevel;
@@ -71,7 +73,8 @@ export class HomeComponent {
   ]
 
   constructor(private fb: FormBuilder,
-              private gameService: GameService) {
+              private gameService: GameService,
+  private router: Router) {
     this.newGameForm = this.fb.group({
       color: ["", Validators.required],
       difficulty: ["", Validators.required]
@@ -114,7 +117,10 @@ export class HomeComponent {
     };
 
       this.gameService.createNewGame(newGameRequest).subscribe({
-        next: (response) => console.log('Guardado en backend:', response),
+        next: (response) => {console.log('Guardado en backend:', response);
+        console.log('➡️ Navegando al tablero...');
+        this.router.navigate(['/board']);
+        },
         error: (err) => console.error('Error al guardar en backend', err)
       });
 
@@ -181,6 +187,8 @@ export class HomeComponent {
   getDifficultyClass(difficulty: string): string {
     return `difficulty-${difficulty}`
   }
-
+  irAlTablero() {
+    this.router.navigate(['/board']);
+  }
 
 }
