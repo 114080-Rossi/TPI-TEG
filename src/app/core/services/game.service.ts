@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {backUrl} from '../../../../env';
 
 // Interfaces para los DTO
 export interface NewGameRequestDTO {
@@ -23,7 +24,7 @@ export class GameService {
   /**
    * URL base de la API backend.
    */
-  private apiUrl = 'http://localhost:8081/games';
+  private apiUrl = backUrl;
 
   constructor(private http: HttpClient) {}
 

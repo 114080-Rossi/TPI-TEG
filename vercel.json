@@ -1,0 +1,11 @@
+{
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "builds": [
+    {
+      "src": "angular.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist/tpi-teg-fe-tpi-teg" }
+    }
+  ],
+  "routes": [{ "src": "/(.*)", "dest": "/index.html" }]
+}

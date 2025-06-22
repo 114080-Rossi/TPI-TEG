@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { BoardResponseDTO } from 'app/core/models/board.models/board-response-dto';
 import { Observable } from 'rxjs';
 import {CountryDTO} from 'app/core/models/board.models/country-dto';
+import {backUrl} from '../../../../env';
 
 @Injectable({ providedIn: 'root' })
 export class BoardService {
-  private apiUrl = 'http://localhost:8081/countries/board'; //
+  private apiUrl = backUrl + `/countries`; //
 
   constructor(private http: HttpClient) {}
 
@@ -15,10 +16,10 @@ export class BoardService {
 
   }
   getCountryById(id: number): Observable<CountryDTO> {
-    return this.http.get<CountryDTO>(`http://localhost:8081/countries/${id}`);
+    return this.http.get<CountryDTO>(this.apiUrl + `/${id}`);
   }
 
   findPath(fromId: number, toId: number): Observable<CountryDTO[]> {
-    return this.http.get<CountryDTO[]>(`http://localhost:8081/countries/findpath/${fromId}/${toId}`);
+    return this.http.get<CountryDTO[]>(this.apiUrl + `/findpath/${fromId}/${toId}`);
   }
 }

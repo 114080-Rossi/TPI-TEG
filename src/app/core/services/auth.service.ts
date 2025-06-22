@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoginRequest, LoginResponse } from 'src/app/core/models/interfaces/player/player.login.model';
+import {backUrl} from '../../../../env';
 
 /**
  * Servicio que gestiona la autenticación de usuarios.
@@ -12,7 +13,7 @@ export class AuthService {
   /**
    * URL base de la API backend.
    */
-  private BASE_URL = 'http://localhost:8081';
+  private BASE_URL = backUrl;
   constructor(private http: HttpClient) {}
   /**
    * Envia credenciales al backend para iniciar sesion.
