@@ -6,6 +6,5 @@
       "use": "@vercel/static-build",
       "config": { "distDir": "dist/tpi-teg-fe-tpi-teg" }
     }
-  ],
-  "routes": [{ "src": "/(.*)", "dest": "/index.html" }]
+  ]
 }
