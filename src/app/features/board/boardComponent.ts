@@ -7,11 +7,13 @@ import {PlayerinfoComponent} from 'app/features/PlayerInfo/playerinfo.component'
 import {ActivatedRoute} from '@angular/router';
 import { AttackModalComponent } from './attack-modal/attack-modal.component';
 import { RegroupModalComponent } from './regroup-modal/regroup-modal.component';
+import { DistributeArmiesModalComponent } from './distribute-armies-modal/distribute-armies-modal.component';
+import {Assignment} from 'app/core/models/assignments/assignment.model';
 
 
 @Component({
   standalone: true,
-  imports:    [ CommonModule, FormsModule, PlayerinfoComponent, AttackModalComponent, RegroupModalComponent ],
+  imports: [CommonModule, FormsModule, PlayerinfoComponent, AttackModalComponent, RegroupModalComponent, DistributeArmiesModalComponent],
   selector:   'app-board',
   templateUrl:'./board.html',
   styleUrls: ['./board.css'],
@@ -221,6 +223,18 @@ export class BoardComponent implements OnInit, AfterViewInit {
     // this.boardService.regroup(this.gameId, this.playerId, event.from, event.to, event.armies).subscribe(...);
     console.log('Reagrupación:', event);
     this.modalRegroupAbierto = false;
+  }
+
+  modalDistributeOpen = false;
+  distributeArmies(): void {
+    console.log('Repartir Ejército pulsado');
+    this.modalDistributeOpen = true;
+  }
+
+  onDistributeConfirm(assignments: Assignment[]) {
+    console.log('Reparto final:', assignments);
+    this.modalDistributeOpen = false;
+    // Aquí llamas al backend, procesas el resultado, etc.
   }
 
   /** Se disparará al hacer click en “Terminar Turno” */

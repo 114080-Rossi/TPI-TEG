@@ -18,4 +18,5 @@ export class PlayerinfoComponent {
   @Output() attack     = new EventEmitter<void>();
   @Output() regroup    = new EventEmitter<void>();
   @Output() endTurn    = new EventEmitter<void>();
+  @Output() distributeArmies = new EventEmitter<void>();
 }

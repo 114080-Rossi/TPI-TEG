@@ -37,6 +37,7 @@
     <app-player-info
       [objective]="objective"
       (rollDice)="rollDice()"
+      (distributeArmies)="distributeArmies()"
       (attack)="attack()"
       (regroup)="regroup()"
       (endTurn)="endTurn()"
@@ -57,3 +58,13 @@
   (close)="modalRegroupAbierto = false"
   (confirm)="onRegroupConfirm($event)">
 </app-regroup-modal>
+
+<app-distribute-armies-modal
+  [open]="modalDistributeOpen"
+  [countries]="countries"
+  [totalArmies]="10"
+(close)="modalDistributeOpen = false"
+(confirm)="onDistributeConfirm($event)">
+</app-distribute-armies-modal>
+
+
