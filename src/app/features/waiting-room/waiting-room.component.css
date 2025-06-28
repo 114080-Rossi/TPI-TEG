@@ -1,0 +1,56 @@
+.waiting-room-card {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 32px 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  text-align: left;
+}
+
+.waiting-room-card h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.waiting-room-card p {
+  margin: 10px 0;
+  font-size: 1.05em;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 28px;
+}
+
+.start-btn {
+  background: #27ae60;
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.start-btn:hover {
+  background: #219150;
+}
+
+.cancel-btn {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cancel-btn:hover {
+  background: #c0392b;
+}

@@ -1,0 +1,19 @@
+<div class="waiting-room-card" *ngIf="gameData">
+  <h2>Datos de la partida</h2>
+  <p><strong>ID:</strong> {{ gameData.gameId }}</p>
+  <p><strong>Fecha:</strong> {{ gameData.localDateTime }}</p>
+  <p><strong>Dificultad:</strong> {{ gameData.difficultyLevel }}</p>
+  <p><strong>Estado:</strong> {{ gameData.status }}</p>
+  <p><strong>Turno:</strong> {{ gameData.turnState }}</p>
+  <p><strong>Número de jugadores:</strong> {{ gameData.numberPlayer }}</p>
+  <div class="button-group">
+
+    <button class="start-btn"
+            [disabled]="!canStartGame()"
+            (click)="startGame()">
+      Empezar partida
+    </button>
+
+    <button class="cancel-btn" (click)="cancelGame()">Cancelar partida</button>
+  </div>
+</div>

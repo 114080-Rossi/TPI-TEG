@@ -92,7 +92,7 @@
           type="submit"
           class="btn btn-success"
           [disabled]="newGameForm.invalid">
-          Start Game
+          New Game
         </button>
         <button
           type="button"
@@ -104,7 +104,6 @@
 
     </form>
   </div>
-<!--  <form [formGroup]="newGameForm" (ngSubmit)="onStartNewGame()">-->
 
   <!-- Formulario para el join game -->
   <div class="join-game-form" *ngIf="showJoinGameForm">
@@ -138,15 +137,14 @@
             </button>
           </div>
           <div class="game-details">
-<!--            <span class="color-indicator" [ngClass]="getColorClass(game.color)"></span>-->
-<!--            <span class="color-text">{{ game.color }}</span>-->
-            <span class="difficulty" [ngClass]="getDifficultyClass(game.gameDifficulty)">
-              {{ game.gameDifficulty }}
-            </span>
+          <span class="difficulty" [ngClass]="getDifficultyClass(game.difficultyLevel)">
+            {{ game.difficultyLevel }}
+          </span>
+            <span class="players">Jugadores: {{ game.numberPlayer }}</span>
           </div>
           <div class="game-meta">
-            <span class="date"></span>
-<!--            <span class="status">{{ game.status }}</span>-->
+            <span class="date">{{ game.localDateTime }}</span>
+            <span class="status">{{ game.status }}</span>
           </div>
         </div>
       </div>
@@ -166,6 +164,13 @@
         Volver
       </button>
     </div>
+
   </div>
+
+    <ng-template #noGames>
+      <div class="no-games">
+        <p>No hay juegos guardados</p>
+      </div>
+    </ng-template>
 
 </div>

@@ -3,6 +3,10 @@ import { CommonModule } from '@angular/common';
 import { BoardService } from 'app/core/services/board.services';
 import { CountryDTO } from 'app/core/models/board.models/country-dto';
 import { FormsModule } from '@angular/forms';
+
+import {StartGameDTO} from 'app/core/models/game/startGame';
+import {Router} from '@angular/router';
+
 import {PlayerinfoComponent} from 'app/features/PlayerInfo/playerinfo.component';
 import {ActivatedRoute} from '@angular/router';
 import { AttackModalComponent } from './attack-modal/attack-modal.component';
@@ -25,13 +29,27 @@ export class BoardComponent implements OnInit, AfterViewInit {
   selectedOriginId: number | null = null;
   selectedDestinationId: number | null = null;
   caminoActual: CountryDTO[] = [];
+  game!: StartGameDTO;
   gameId!:   number;
   playerId!: number;
   objective = '📝 Objetivo de ejemplo';
 
-  constructor(private boardService: BoardService,private route: ActivatedRoute) {}
+  constructor(
+    private boardService: BoardService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
-  playSound(file: string, duration?: number) {
+
+  ngOnInit(): void {
+    const navigation = this.router.getCurrentNavigation();
+    this.game = navigation?.extras.state?.['game'] as StartGameDTO;
+    console.log('ngOnInit ejecutado');
+    this.gameId   = +this.route.snapshot.paramMap.get('gameId')!;
+    this.playerId = +this.route.snapshot.paramMap.get('playerId')!;
+  }
+
+    playSound(file: string, duration?: number) {
     const audio = new Audio();
     audio.src = `assets/sounds/${file}`;
     audio.load();
@@ -46,12 +64,6 @@ export class BoardComponent implements OnInit, AfterViewInit {
     audio.play();
   }
 
-  ngOnInit(): void {
-    this.gameId   = +this.route.snapshot.paramMap.get('gameId')!;
-    this.playerId = +this.route.snapshot.paramMap.get('playerId')!;
-    //TODO
-    // cargar getObjective(playerId)
-    }
 
   ngAfterViewInit(): void {
     const svgElement = document.getElementById('svgMap') as HTMLObjectElement;

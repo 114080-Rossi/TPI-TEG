@@ -1,15 +1,16 @@
-// src/app/features/home/home.component.ts
-
+import {GameService} from 'app/core/services/game.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule }      from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import {  FormBuilder,  FormGroup,  ReactiveFormsModule,  Validators} from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GameService, NewGameRequestDTO } from 'app/core/services/game.service';
+
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {GameHistory, NewGameRequestDTO} from 'app/core/models/game/game.model';
+
 
 enum Colors {
   RED = 'RED',
@@ -57,16 +58,14 @@ interface GameConfig {
   styleUrls:   ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-
+  showNewGameForm = false
+  showLoadGameList = false
+  newGameForm: FormGroup
+  savedGames: GameHistory[] = []
+  currentDate: Date = new Date();
+  joinGameId: number | null = null;
+  showJoinGameForm = false;
   playerId!: number;
-
-  showNewGameForm   = false;
-  showLoadGameList  = false;
-  showJoinGameForm  = false;
-  newGameForm:      FormGroup;
-  savedGames:       GameConfig[] = [];
-  currentDate       = new Date();
-  joinGameId:       number | null = null;
 
   colorOptions = [
     { value: "RED",    label: "RED" },
@@ -146,22 +145,43 @@ export class HomeComponent implements OnInit {
       RED: 1, BLUE: 2, GREEN: 3, YELLOW: 4, PURPLE: 5
     };
 
-    const difficulty = this.newGameForm.get('difficulty')!.value as 'easy'|'medium'|'expert';
-    const color      = this.newGameForm.get('color')!.value      as keyof typeof colorMap;
-    const botCount   = Number(this.newGameForm.get('botCount')!.value);
-
-    const dto: NewGameRequestDTO = {
-      created_by_player_id: this.playerId,
-      amount_bot:           botCount,
-      game_difficulty:      difficultyMap[difficulty],
-      color_id:             colorMap[color]
+    const formValue = this.newGameForm.value;
+    //const playerId = 1063 //Number(sessionStorage.getItem('playerId')); // TODO Reemplaza con el ID real del jugador sessionstorage
+    const newGameRequest: NewGameRequestDTO = {
+      color_id: colorMap[formValue.color],
+      game_difficulty: difficultyMap[formValue.difficulty],
+      amount_bot: Number(formValue.botCount),
+      created_by_player_id: this.playerId
     };
 
-    this.gameService.createNewGame(dto).subscribe({
-      next: response => {
-        // ajusta si tu DTO usa snake_case o camelCase:
-        const gameId = (response as any).gameId ?? (response as any).game_id;
-        this.router.navigate(['/board', gameId, this.playerId]);  // <-- ambos IDs
+    this.gameService.createNewGame(newGameRequest).subscribe({
+      next: (response) => {
+        if (response && response.gameId !== undefined && response.gameId !== null) {
+          const gameId = (response as any).gameId ?? (response as any).game_id;
+          //this.router.navigate(['/waiting-room', response.gameId]);
+          this.router.navigate(['/waiting-room', gameId, this.playerId]);  // <-- ambos IDs
+          
+        } else {
+          console.error('gameId es undefined o null en la respuesta');
+        }
+// =======
+//     const difficulty = this.newGameForm.get('difficulty')!.value as 'easy'|'medium'|'expert';
+//     const color      = this.newGameForm.get('color')!.value      as keyof typeof colorMap;
+//     const botCount   = Number(this.newGameForm.get('botCount')!.value);
+
+//     const dto: NewGameRequestDTO = {
+//       created_by_player_id: this.playerId,
+//       amount_bot:           botCount,
+//       game_difficulty:      difficultyMap[difficulty],
+//       color_id:             colorMap[color]
+//     };
+
+//     this.gameService.createNewGame(dto).subscribe({
+//       next: response => {
+//         // ajusta si tu DTO usa snake_case o camelCase:
+//         const gameId = (response as any).gameId ?? (response as any).game_id;
+//         this.router.navigate(['/board', gameId, this.playerId]);  // <-- ambos IDs
+// >>>>>>> weekNine
       },
       error: err => console.error('Error al crear el juego', err)
     });
@@ -170,7 +190,7 @@ export class HomeComponent implements OnInit {
     this.showNewGameForm = false;
   }
 
-  onSelectSavedGame(game: GameConfig) {
+  onSelectSavedGame(game: GameHistory) {
     // Aquí puedes navegar a la pantalla del juego con la configuración cargada
     this.showLoadGameList = false
   }
@@ -190,25 +210,21 @@ export class HomeComponent implements OnInit {
     return "game_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9)
   }
 
-  private saveGame(gameConfig: GameConfig) {
+  private saveGame(gameConfig: GameHistory) {
     this.savedGames.push(gameConfig)
     this.updateLocalStorage()
   }
 
-  //savedGames: NewGameResponseDTO[] = [];
-
   loadSavedGames() {
-    const playerId = 49; // Reemplaza con el ID del jugador actual
-    //TODO todavia me falta esta parte, por ahora lo dejo hardcodeado
+    const playerId = 1063; // TODO: Reemplaza con el ID real del jugador
     this.gameService.getGamesByPlayer(playerId).subscribe({
       next: (games) => {
         this.savedGames = games.map(game => ({
           gameId: game.gameId,
-          gameDifficulty: game.gameDifficulty as DifficultyLevel,
-          gameState: game.gameState as GameState,
-          currentTurnPlayerId: game.currentTurnPlayerId,
-          createdByPlayerId: game.createdByPlayerId,
-          turnState: game.turnState as TurnState
+          localDateTime: game.localDateTime,
+          difficultyLevel: game.difficultyLevel,
+          status: game.status,
+          numberPlayer: game.numberPlayer
         }));
       },
       error: (err) => {
