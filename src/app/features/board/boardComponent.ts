@@ -5,10 +5,11 @@ import { CountryDTO } from 'app/core/models/board.models/country-dto';
 import { FormsModule } from '@angular/forms';
 import {PlayerinfoComponent} from 'app/features/PlayerInfo/playerinfo.component';
 import {ActivatedRoute} from '@angular/router';
+import { AttackModalComponent } from './attack-modal/attack-modal.component';
 
 @Component({
   standalone: true,
-  imports:    [ CommonModule, FormsModule, PlayerinfoComponent ],
+  imports:    [ CommonModule, FormsModule, PlayerinfoComponent, AttackModalComponent ],
   selector:   'app-board',
   templateUrl:'./board.html',
   styleUrls: ['./board.css'],
@@ -193,10 +194,17 @@ export class BoardComponent implements OnInit, AfterViewInit {
     //TODO
   }
 
+  modalAtaqueAbierto = false;
   /** Se disparará al hacer click en “Atacar” */
   attack(): void {
     console.log('attack pulsado');
-    //TODO
+    this.modalAtaqueAbierto = true;
+  }
+
+  onAttackConfirm(event: { from: number, to: number, armies: number }) {
+    // solo para test, luego llamas al servicio aquí
+    console.log('Confirmado ataque:', event);
+    this.modalAtaqueAbierto = false;
   }
 
   /** Se disparará al hacer click en “Reagrupar” */

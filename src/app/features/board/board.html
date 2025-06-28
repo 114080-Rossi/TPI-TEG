@@ -43,3 +43,10 @@
     ></app-player-info>
   </div>
 </div>
+
+<app-attack-modal
+  [countries]="countries"
+  [open]="modalAtaqueAbierto"
+  (close)="modalAtaqueAbierto = false"
+  (confirm)="onAttackConfirm($event)">
+</app-attack-modal>

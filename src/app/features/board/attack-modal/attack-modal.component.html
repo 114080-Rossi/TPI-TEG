@@ -1,0 +1,22 @@
+<div class="modal" *ngIf="open">
+  <div class="modal-content">
+    <h3>Atacar</h3>
+    <label>Desde:</label>
+    <select [(ngModel)]="fromCountryId">
+      <option [ngValue]="null" disabled selected>Elige país de origen</option>
+      <option *ngFor="let c of countries" [ngValue]="c.id">{{c.name}}</option>
+    </select>
+    <label>A:</label>
+    <select [(ngModel)]="toCountryId" [disabled]="!fromCountryId">
+      <option [ngValue]="null" disabled selected>Elige país a atacar</option>
+      <option *ngFor="let c of attackableCountries" [ngValue]="c.id">{{c.name}}</option>
+    </select>
+    <label>Ejércitos:</label>
+    <input type="number" [(ngModel)]="armies" min="1" [max]="10" />
+    <div class="buttons">
+      <button (click)="onConfirm()">Confirmar</button>
+      <button (click)="onClose()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
