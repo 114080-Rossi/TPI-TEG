@@ -4,7 +4,6 @@ import { BoardService } from 'app/core/services/board.services';
 import { CountryDTO } from 'app/core/models/board.models/country-dto';
 import { FormsModule } from '@angular/forms';
 
-
 @Component({
   selector: 'app-board',
   standalone: true,
@@ -24,7 +23,6 @@ export class BoardComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     const svgElement = document.getElementById('svgMap') as HTMLObjectElement;
-
 
       if (!svgElement) {
         console.error('❌ No se encontró el elemento SVG');
@@ -53,8 +51,6 @@ export class BoardComponent implements AfterViewInit {
       svgElement.addEventListener('load', onLoad);
     }
   }
-
-
 
   mostrarCamino(): void {
     if (!this.selectedOriginId || !this.selectedDestinationId) {
@@ -98,8 +94,6 @@ export class BoardComponent implements AfterViewInit {
     }, 500);
   }
 
-
-
   pintarMapa(): void {
     if (!this.svgDoc) return;
 
@@ -136,7 +130,6 @@ export class BoardComponent implements AfterViewInit {
     });
   }
 
-
   actualizarSeleccion(): void {
     if (!this.svgDoc) return;
 
@@ -163,7 +156,6 @@ export class BoardComponent implements AfterViewInit {
     });
   }
 
-
   seleccionarPorId(id: number): void {
     console.log('🖱️ Selección del país con ID:', id);
 
@@ -184,5 +176,4 @@ export class BoardComponent implements AfterViewInit {
       console.warn(`❌ País no encontrado con ID: ${id}`);
     }
   }
-
 }

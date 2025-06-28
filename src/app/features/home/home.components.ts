@@ -57,6 +57,8 @@ export class HomeComponent {
   newGameForm: FormGroup
   savedGames: GameConfig[] = []
   currentDate: Date = new Date();
+  joinGameId: number | null = null;
+  showJoinGameForm = false;
 
   colorOptions = [
     { value: "RED", label: "RED" },
@@ -72,60 +74,84 @@ export class HomeComponent {
     { value: "expert", label: "Experto" }
   ]
 
-  constructor(private fb: FormBuilder,
-              private gameService: GameService,
-  private router: Router) {
+  constructor(private fb: FormBuilder, private gameService: GameService, private router: Router) {
     this.newGameForm = this.fb.group({
       color: ["", Validators.required],
-      difficulty: ["", Validators.required]
-    })
-
-    this.loadSavedGames()
+      difficulty: ["", Validators.required],
+      botCount: ["", Validators.required]
+    });
+    this.loadSavedGames();
   }
 
   onNewGame() {
     this.showNewGameForm = true
     this.showLoadGameList = false
+    this.showJoinGameForm = false
   }
 
   onLoadGame() {
     this.showLoadGameList = true
     this.showNewGameForm = false
+    this.showJoinGameForm = false
     // this.loadSavedGames()
   }
 
+  onJoinGame() {
+    this.showJoinGameForm = true;
+    this.showNewGameForm = false;
+    this.showLoadGameList = false;
+    this.gameService.getJoinGameNumber().subscribe(id => {
+      this.joinGameId = id;
+    });
+  }
+
+  onCloseJoinGame() {
+    this.showJoinGameForm = false;
+    this.joinGameId = null;
+  }
+
+  onJoinToGame(gameId: number) {
+    // Aquí va la lógica para unirse al juego, por ejemplo:
+
+    this.router.navigate(['/board', gameId]);
+  }
+
   onStartNewGame() {
+    if (this.newGameForm.invalid) return;
     const difficultyMap: { [key: string]: number } = {
       easy: 1,
       medium: 2,
       expert: 3
     };
-
     const colorMap: { [key: string]: number } = {
       RED: 1,
       BLUE: 2,
       GREEN: 3,
       YELLOW: 4,
       PURPLE: 5
-    }
-    const selectedDifficulty = this.newGameForm.value.difficulty;
-    const selectedColor = this.newGameForm.value.color;
-
+    };
+    const formValue = this.newGameForm.value;
+    //const playerId = Number(sessionStorage.getItem('playerId'));
     const newGameRequest: NewGameRequestDTO = {
-      gameDifficulty: difficultyMap[selectedDifficulty],
-      colorPlayer: colorMap[selectedColor]
+      created_by_player_id: 1063, // Reemplaza con el ID real del jugador sessionstorage
+      amount_bot: Number(formValue.botCount),
+      game_difficulty: difficultyMap[formValue.difficulty],
+      color_id: colorMap[formValue.color]
     };
 
-      this.gameService.createNewGame(newGameRequest).subscribe({
-        next: (response) => {console.log('Guardado en backend:', response);
-        console.log('➡️ Navegando al tablero...');
-        this.router.navigate(['/board']);
-        },
-        error: (err) => console.error('Error al guardar en backend', err)
-      });
+    this.gameService.createNewGame(newGameRequest).subscribe({
+      next: (response) => {
+        if (response && response.gameId !== undefined && response.gameId !== null) {
+          this.router.navigate(['/board', response.gameId]);
+        } else {
+          console.error('gameId es undefined o null en la respuesta');
+        }
+      },
+      error: (err) => console.error('Error al crear el juego', err)
+    });
 
-      this.newGameForm.reset();
-      this.showNewGameForm = false;
+    this.newGameForm.reset();
+    this.showNewGameForm = false;
   }
 
   onSelectSavedGame(game: GameConfig) {
@@ -190,5 +216,7 @@ export class HomeComponent {
   irAlTablero() {
     this.router.navigate(['/board']);
   }
+
+
 
 }

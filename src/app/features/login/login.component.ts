@@ -59,6 +59,7 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(credenciales).subscribe({
       next: (response) => {
+
         this.router.navigate(['/home']);
       },
       error: () => {
