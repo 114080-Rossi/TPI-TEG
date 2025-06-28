@@ -6,7 +6,8 @@ import {CommonModule} from '@angular/common';
   selector:    'app-player-info',
   standalone:  true,
   imports:     [ CommonModule ],
-  templateUrl: './playerinfo.html'
+  templateUrl: './playerinfo.html',
+  styleUrls: ['./PlayerInfo.css']
 })
 export class PlayerinfoComponent {
   /** Texto con el objetivo del jugador */

@@ -1,0 +1,30 @@
+/* src/app/features/player-info/player-info.component.css */
+:host {
+  display: block;
+  width: 100%;
+}
+
+.player-info-card {
+  /* —— este es el rectángulo que envuelve todo —— */
+  border: 2px solid #fff;           /* borde blanco de 2px */
+  border-radius: 6px;               /* esquinas redondeadas */
+  padding: 0.8rem;                  /* espacio interior */
+  background: rgba(0,0,0,0.2);      /* semitransparente */
+  display: flex;
+  flex-direction: column;
+}
+
+.player-info-card h3 {
+  margin: 0 0 0.5rem;
+}
+
+.objective-text {
+  margin: 0 0 1rem;
+}
+
+/* botones alineados a la derecha y algo de separación */
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
