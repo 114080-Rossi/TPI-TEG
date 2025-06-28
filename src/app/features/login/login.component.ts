@@ -48,6 +48,7 @@ export class LoginComponent implements OnInit {
    * Si falla, muestra un mensaje de error.
    */
   onSubmit(): void {
+
     if (this.loginForm.invalid) {
       return;
     }
@@ -59,7 +60,8 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(credenciales).subscribe({
       next: (response) => {
-        this.router.navigate(['/home']);
+        sessionStorage.setItem('playerId', response.id.toString());
+        this.router.navigate(['/home', response.id]);
       },
       error: () => {
         this.errorMessage = 'Asegurate de que el usuario exista o revisa tu usuario y contraseña';

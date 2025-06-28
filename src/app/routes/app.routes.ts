@@ -1,7 +1,17 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from 'src/app/features/login/login.component';
+import { RegisterComponent } from '../features/register/register.component';
+import { HomeComponent } from '../features/home/home.components';
+import { BoardComponent } from '../features/board/boardComponent';
+import {WaitingRoomComponent} from 'app/features/waiting-room/waiting-room.component';
 
 export const routes: Routes = [
-  { path: '', component: LoginComponent }
-
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'home/:id', component: HomeComponent },
+  { path: 'board/:gameId/:id', component: BoardComponent },
+  { path: 'waiting-room/:gameId/:id', component: WaitingRoomComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'login' }
 ];
+
