@@ -31,6 +31,21 @@ export class BoardComponent implements OnInit, AfterViewInit {
 
   constructor(private boardService: BoardService,private route: ActivatedRoute) {}
 
+  playSound(file: string, duration?: number) {
+    const audio = new Audio();
+    audio.src = `assets/sounds/${file}`;
+    audio.load();
+    if (duration) {
+      audio.addEventListener('play', () => {
+        setTimeout(() => {
+          audio.pause();
+          audio.currentTime = 0;
+        }, duration * 1500);
+      });
+    }
+    audio.play();
+  }
+
   ngOnInit(): void {
     this.gameId   = +this.route.snapshot.paramMap.get('gameId')!;
     this.playerId = +this.route.snapshot.paramMap.get('playerId')!;
@@ -201,6 +216,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
   modalAtaqueAbierto = false;
   /** Se disparará al hacer click en “Atacar” */
   attack(): void {
+    this.playSound('espada_ataque.wav', 0.5);
     console.log('attack pulsado');
     this.modalAtaqueAbierto = true;
   }
@@ -214,6 +230,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
   modalRegroupAbierto = false;
   /** Se disparará al hacer click en “Reagrupar” */
   regroup(): void {
+    this.playSound('army_regroup.wav', 1);
     console.log('regroup pulsado');
     this.modalRegroupAbierto = true;
   }
@@ -227,6 +244,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
 
   modalDistributeOpen = false;
   distributeArmies(): void {
+    this.playSound('army_insert.wav', 1);
     console.log('Repartir Ejército pulsado');
     this.modalDistributeOpen = true;
   }
