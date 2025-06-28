@@ -1,4 +1,4 @@
-import {GameService, NewGameRequestDTO} from 'app/core/services/game.service';
+import {GameService} from 'app/core/services/game.service';
 
 enum Colors {
   RED = 'RED',
@@ -29,19 +29,11 @@ enum TurnState {
   CANCELED = 'CANCELED'
 }
 
-interface GameConfig {
-  gameId: number;
-  gameDifficulty: DifficultyLevel;
-  gameState: GameState;
-  currentTurnPlayerId: number | null;
-  createdByPlayerId: number;
-  turnState: TurnState;
-}
-
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
+import {GameHistory, NewGameRequestDTO} from 'app/core/models/game/game.model';
 
 @Component({
   selector: 'app-home',
@@ -55,7 +47,7 @@ export class HomeComponent {
   showNewGameForm = false
   showLoadGameList = false
   newGameForm: FormGroup
-  savedGames: GameConfig[] = []
+  savedGames: GameHistory[] = []
   currentDate: Date = new Date();
   joinGameId: number | null = null;
   showJoinGameForm = false;
@@ -131,18 +123,19 @@ export class HomeComponent {
       PURPLE: 5
     };
     const formValue = this.newGameForm.value;
-    //const playerId = Number(sessionStorage.getItem('playerId'));
+    const playerId = 1063 //Number(sessionStorage.getItem('playerId')); // TODO Reemplaza con el ID real del jugador sessionstorage
     const newGameRequest: NewGameRequestDTO = {
-      created_by_player_id: 1063, // Reemplaza con el ID real del jugador sessionstorage
-      amount_bot: Number(formValue.botCount),
+      color_id: colorMap[formValue.color],
       game_difficulty: difficultyMap[formValue.difficulty],
-      color_id: colorMap[formValue.color]
+      amount_bot: Number(formValue.botCount),
+      created_by_player_id: playerId
     };
 
     this.gameService.createNewGame(newGameRequest).subscribe({
       next: (response) => {
+        console.log('Respuesta del backend:', response);
         if (response && response.gameId !== undefined && response.gameId !== null) {
-          this.router.navigate(['/board', response.gameId]);
+          this.router.navigate(['/waiting-room', response.gameId]);
         } else {
           console.error('gameId es undefined o null en la respuesta');
         }
@@ -154,7 +147,7 @@ export class HomeComponent {
     this.showNewGameForm = false;
   }
 
-  onSelectSavedGame(game: GameConfig) {
+  onSelectSavedGame(game: GameHistory) {
     // Aquí puedes navegar a la pantalla del juego con la configuración cargada
     this.showLoadGameList = false
   }
@@ -174,25 +167,21 @@ export class HomeComponent {
     return "game_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9)
   }
 
-  private saveGame(gameConfig: GameConfig) {
+  private saveGame(gameConfig: GameHistory) {
     this.savedGames.push(gameConfig)
     this.updateLocalStorage()
   }
 
-  //savedGames: NewGameResponseDTO[] = [];
-
   loadSavedGames() {
-    const playerId = 49; // Reemplaza con el ID del jugador actual
-    //TODO todavia me falta esta parte, por ahora lo dejo hardcodeado
+    const playerId = 1063; // TODO: Reemplaza con el ID real del jugador
     this.gameService.getGamesByPlayer(playerId).subscribe({
       next: (games) => {
         this.savedGames = games.map(game => ({
           gameId: game.gameId,
-          gameDifficulty: game.gameDifficulty as DifficultyLevel,
-          gameState: game.gameState as GameState,
-          currentTurnPlayerId: game.currentTurnPlayerId,
-          createdByPlayerId: game.createdByPlayerId,
-          turnState: game.turnState as TurnState
+          localDateTime: game.localDateTime,
+          difficultyLevel: game.difficultyLevel,
+          status: game.status,
+          numberPlayer: game.numberPlayer
         }));
       },
       error: (err) => {
