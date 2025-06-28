@@ -3,14 +3,23 @@ import { CommonModule } from '@angular/common';
 import { BoardService } from 'app/core/services/board.services';
 import { CountryDTO } from 'app/core/models/board.models/country-dto';
 import { FormsModule } from '@angular/forms';
+
 import {StartGameDTO} from 'app/core/models/game/startGame';
 import {Router} from '@angular/router';
 
+import {PlayerinfoComponent} from 'app/features/PlayerInfo/playerinfo.component';
+import {ActivatedRoute} from '@angular/router';
+import { AttackModalComponent } from './attack-modal/attack-modal.component';
+import { RegroupModalComponent } from './regroup-modal/regroup-modal.component';
+import { DistributeArmiesModalComponent } from './distribute-armies-modal/distribute-armies-modal.component';
+import {Assignment} from 'app/core/models/assignments/assignment.model';
+
+
 @Component({
-  selector: 'app-board',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './board.html',
+  imports: [CommonModule, FormsModule, PlayerinfoComponent, AttackModalComponent, RegroupModalComponent, DistributeArmiesModalComponent],
+  selector:   'app-board',
+  templateUrl:'./board.html',
   styleUrls: ['./board.css'],
 })
 export class BoardComponent implements OnInit, AfterViewInit {
@@ -21,17 +30,40 @@ export class BoardComponent implements OnInit, AfterViewInit {
   selectedDestinationId: number | null = null;
   caminoActual: CountryDTO[] = [];
   game!: StartGameDTO;
+  gameId!:   number;
+  playerId!: number;
+  objective = '📝 Objetivo de ejemplo';
 
   constructor(
     private boardService: BoardService,
+    private route: ActivatedRoute,
     private router: Router
   ) {}
+
 
   ngOnInit(): void {
     const navigation = this.router.getCurrentNavigation();
     this.game = navigation?.extras.state?.['game'] as StartGameDTO;
     console.log('ngOnInit ejecutado');
+    this.gameId   = +this.route.snapshot.paramMap.get('gameId')!;
+    this.playerId = +this.route.snapshot.paramMap.get('playerId')!;
   }
+
+    playSound(file: string, duration?: number) {
+    const audio = new Audio();
+    audio.src = `assets/sounds/${file}`;
+    audio.load();
+    if (duration) {
+      audio.addEventListener('play', () => {
+        setTimeout(() => {
+          audio.pause();
+          audio.currentTime = 0;
+        }, duration * 1500);
+      });
+    }
+    audio.play();
+  }
+
 
   ngAfterViewInit(): void {
     const svgElement = document.getElementById('svgMap') as HTMLObjectElement;
@@ -187,5 +219,57 @@ export class BoardComponent implements OnInit, AfterViewInit {
     } else {
       console.warn(`❌ País no encontrado con ID: ${id}`);
     }
+  }
+  rollDice(): void {
+    console.log('rollDice pulsado');
+    //TODO
+  }
+
+  modalAtaqueAbierto = false;
+  /** Se disparará al hacer click en “Atacar” */
+  attack(): void {
+    this.playSound('espada_ataque.wav', 0.5);
+    console.log('attack pulsado');
+    this.modalAtaqueAbierto = true;
+  }
+
+  onAttackConfirm(event: { from: number, to: number, armies: number }) {
+    // solo para test, luego llamas al servicio aquí
+    console.log('Confirmado ataque:', event);
+    this.modalAtaqueAbierto = false;
+  }
+
+  modalRegroupAbierto = false;
+  /** Se disparará al hacer click en “Reagrupar” */
+  regroup(): void {
+    this.playSound('army_regroup.wav', 1);
+    console.log('regroup pulsado');
+    this.modalRegroupAbierto = true;
+  }
+
+  onRegroupConfirm(event: { from: number, to: number, armies: number }) {
+    // Llama aquí al BoardService con el endpoint de /turns/regroup
+    // this.boardService.regroup(this.gameId, this.playerId, event.from, event.to, event.armies).subscribe(...);
+    console.log('Reagrupación:', event);
+    this.modalRegroupAbierto = false;
+  }
+
+  modalDistributeOpen = false;
+  distributeArmies(): void {
+    this.playSound('army_insert.wav', 1);
+    console.log('Repartir Ejército pulsado');
+    this.modalDistributeOpen = true;
+  }
+
+  onDistributeConfirm(assignments: Assignment[]) {
+    console.log('Reparto final:', assignments);
+    this.modalDistributeOpen = false;
+    // Aquí llamas al backend, procesas el resultado, etc.
+  }
+
+  /** Se disparará al hacer click en “Terminar Turno” */
+  endTurn(): void {
+    console.log('endTurn pulsado');
+    //TODO
   }
 }

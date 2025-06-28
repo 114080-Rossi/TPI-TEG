@@ -12,7 +12,7 @@ export class BoardService {
   constructor(private http: HttpClient) {}
 
   getBoard(): Observable<BoardResponseDTO> {
-    return this.http.get<BoardResponseDTO>(this.apiUrl);
+    return this.http.get<BoardResponseDTO>(this.apiUrl +`/board`);
 
   }
   getCountryById(id: number): Observable<CountryDTO> {

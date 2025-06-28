@@ -1,4 +1,16 @@
 import {GameService} from 'app/core/services/game.service';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule }      from '@angular/common';
+import {  FormBuilder,  FormGroup,  ReactiveFormsModule,  Validators} from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { GameService, NewGameRequestDTO } from 'app/core/services/game.service';
+
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {GameHistory, NewGameRequestDTO} from 'app/core/models/game/game.model';
+
 
 enum Colors {
   RED = 'RED',
@@ -29,21 +41,23 @@ enum TurnState {
   CANCELED = 'CANCELED'
 }
 
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {GameHistory, NewGameRequestDTO} from 'app/core/models/game/game.model';
+interface GameConfig {
+  gameId: number;
+  gameDifficulty: DifficultyLevel;
+  gameState: GameState;
+  currentTurnPlayerId: number | null;
+  createdByPlayerId: number;
+  turnState: TurnState;
+}
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
+  selector:    'app-home',
+  standalone:  true,
+  imports:     [ CommonModule, ReactiveFormsModule ],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
-  imports: [CommonModule, ReactiveFormsModule]
+  styleUrls:   ['./home.component.css'],
 })
-
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   showNewGameForm = false
   showLoadGameList = false
   newGameForm: FormGroup
@@ -51,28 +65,39 @@ export class HomeComponent {
   currentDate: Date = new Date();
   joinGameId: number | null = null;
   showJoinGameForm = false;
+  playerId!: number;
 
   colorOptions = [
-    { value: "RED", label: "RED" },
-    { value: "BLUE", label: "BLUE" },
-    { value: "GREEN", label: "GREEN" },
+    { value: "RED",    label: "RED" },
+    { value: "BLUE",   label: "BLUE" },
+    { value: "GREEN",  label: "GREEN" },
     { value: "YELLOW", label: "YELLOW" },
     { value: "PURPLE", label: "PURPLE" }
-  ]
+  ];
 
   difficultyOptions = [
-    { value: "easy", label: "Fácil" },
+    { value: "easy",   label: "Fácil" },
     { value: "medium", label: "Medio" },
     { value: "expert", label: "Experto" }
-  ]
+  ];
 
-  constructor(private fb: FormBuilder, private gameService: GameService, private router: Router) {
+  constructor(
+    private fb:          FormBuilder,
+    private gameService: GameService,
+    private router:      Router,
+    private route:       ActivatedRoute               // <-- inyectado
+  ) {
     this.newGameForm = this.fb.group({
-      color: ["", Validators.required],
+      color:      ["", Validators.required],
       difficulty: ["", Validators.required],
-      botCount: ["", Validators.required]
+      botCount:   ["", Validators.required]
     });
-    this.loadSavedGames();
+  }
+
+  ngOnInit(): void {
+
+    this.playerId = +this.route.snapshot.paramMap.get('playerId')!;
+    this.loadSavedGames();  // ya con playerId correcto
   }
 
   onNewGame() {
@@ -102,44 +127,63 @@ export class HomeComponent {
     this.joinGameId = null;
   }
 
-  onJoinToGame(gameId: number) {
-    // Aquí va la lógica para unirse al juego, por ejemplo:
 
-    this.router.navigate(['/board', gameId]);
+  onJoinToGame(gameId: number): void {
+    // ahora pasamos también playerId
+    this.router.navigate(['/board', gameId, this.playerId]);
   }
 
-  onStartNewGame() {
+  onStartNewGame(): void {
     if (this.newGameForm.invalid) return;
-    const difficultyMap: { [key: string]: number } = {
-      easy: 1,
+
+    const difficultyMap: Record<'easy'|'medium'|'expert', number> = {
+      easy:   1,
       medium: 2,
       expert: 3
     };
-    const colorMap: { [key: string]: number } = {
-      RED: 1,
-      BLUE: 2,
-      GREEN: 3,
-      YELLOW: 4,
-      PURPLE: 5
+    const colorMap: Record<keyof typeof Colors, number> = {
+      RED: 1, BLUE: 2, GREEN: 3, YELLOW: 4, PURPLE: 5
     };
+
     const formValue = this.newGameForm.value;
-    const playerId = 1063 //Number(sessionStorage.getItem('playerId')); // TODO Reemplaza con el ID real del jugador sessionstorage
+    //const playerId = 1063 //Number(sessionStorage.getItem('playerId')); // TODO Reemplaza con el ID real del jugador sessionstorage
     const newGameRequest: NewGameRequestDTO = {
       color_id: colorMap[formValue.color],
       game_difficulty: difficultyMap[formValue.difficulty],
       amount_bot: Number(formValue.botCount),
-      created_by_player_id: playerId
+      created_by_player_id: this.playerId
     };
 
     this.gameService.createNewGame(newGameRequest).subscribe({
       next: (response) => {
         if (response && response.gameId !== undefined && response.gameId !== null) {
-          this.router.navigate(['/waiting-room', response.gameId]);
+          const gameId = (response as any).gameId ?? (response as any).game_id;
+          //this.router.navigate(['/waiting-room', response.gameId]);
+          this.router.navigate(['/waiting-room', gameId, this.playerId]);  // <-- ambos IDs
+          
         } else {
           console.error('gameId es undefined o null en la respuesta');
         }
+// =======
+//     const difficulty = this.newGameForm.get('difficulty')!.value as 'easy'|'medium'|'expert';
+//     const color      = this.newGameForm.get('color')!.value      as keyof typeof colorMap;
+//     const botCount   = Number(this.newGameForm.get('botCount')!.value);
+
+//     const dto: NewGameRequestDTO = {
+//       created_by_player_id: this.playerId,
+//       amount_bot:           botCount,
+//       game_difficulty:      difficultyMap[difficulty],
+//       color_id:             colorMap[color]
+//     };
+
+//     this.gameService.createNewGame(dto).subscribe({
+//       next: response => {
+//         // ajusta si tu DTO usa snake_case o camelCase:
+//         const gameId = (response as any).gameId ?? (response as any).game_id;
+//         this.router.navigate(['/board', gameId, this.playerId]);  // <-- ambos IDs
+// >>>>>>> weekNine
       },
-      error: (err) => console.error('Error al crear el juego', err)
+      error: err => console.error('Error al crear el juego', err)
     });
 
     this.newGameForm.reset();

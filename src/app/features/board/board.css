@@ -1,4 +1,44 @@
-svg path {
-  pointer-events: all;
-  cursor: pointer;
+/* CONTENEDOR PRINCIPAL: dos columnas iguales de altura */
+.board-container {
+  display: flex;
+  justify-content: center;   /* centra horizontalmente el bloque */
+  align-items: stretch;      /* obliga a que map-panel e info-panel tengan igual altura */
+  gap: 1rem;
+  padding: 2rem;
+  background: #043b74;
 }
+
+/* PANEL DEL MAPA */
+.map-panel {
+  flex: 1;                   /* ocupa todo lo que quede disponible */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.map-panel > h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+.map-panel .svg-map {
+  flex: 1;                   /* para que estire verticalmente */
+  width: 100%;
+  height: auto;
+  border: 2px solid #000;
+  border-radius: 4px;
+}
+
+/* PANEL DERECHO QUE IGUALA ALTURA Y ES MÁS FINITO */
+.info-panel {
+  flex: 0 0 300px;           /* ancho fijo de 300px (ajusta a tu gusto) */
+  display: flex;
+  flex-direction: column;
+  background: rgba(255,255,255,0.1);
+  border: 2px solid #000;
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+/* El propio componente <app-player-info> puede ocuparse
+   de su contenido; aquí solo aseguras que info-panel
+   ocupe toda la altura del flex padre */
