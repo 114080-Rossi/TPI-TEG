@@ -1,21 +1,52 @@
+/* --- contenedor general (ahora SIN bordes externos) --- */
 .board-container {
   display: flex;
-  align-items: flex-start;    /* alineados arriba */
-  gap: 1rem;                  /* espacio entre paneles */
+  justify-content: center;
+  align-items: flex-start;
+  background: inherit;
+  padding: 2rem;
+  gap: 1rem;
+  /* quita cualquier border aquí */
 }
 
-/* El mapa ocupa todo el espacio disponible */
+/* --- panel mapa (sin borde envolvente) --- */
 .map-panel {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+.map-panel > h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.map-panel object {
+  max-width: 100%;
+  border: 2px solid #000;     /* borde más fino */
+  border-radius: 4px;
+}
+
+/* --- panel derecho finito --- */
 .info-panel {
-  flex: 0 0 25%;   /* el 25% del ancho del contenedor */
-  max-width: 500px;
-  /* resto de estilos igual */
-  border: 2px solid #000;
+  flex: 0 0 200px;             /* mucho más estrecho */
+  background: rgba(255,255,255,0.15);
+  border: 2px solid #000;      /* mismo grosor que el mapa */
   border-radius: 4px;
   padding: 1rem;
-  background: #fff;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+/* separación entre título y contenido */
+.info-panel h2,
+.info-panel h3 {
+  margin-bottom: 1rem;
+}
+
+/* márgenes más compactos en botones */
+.info-panel button {
+  margin: 0.25rem 0;
 }

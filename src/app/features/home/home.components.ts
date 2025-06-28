@@ -57,6 +57,7 @@ interface GameConfig {
   styleUrls:   ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
+
   playerId!: number;
 
   showNewGameForm   = false;
@@ -95,7 +96,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // lee playerId de la URL /home/:playerId
+
     this.playerId = +this.route.snapshot.paramMap.get('playerId')!;
     this.loadSavedGames();  // ya con playerId correcto
   }

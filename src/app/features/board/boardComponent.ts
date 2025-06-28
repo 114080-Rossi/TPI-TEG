@@ -29,6 +29,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.gameId   = +this.route.snapshot.paramMap.get('gameId')!;
     this.playerId = +this.route.snapshot.paramMap.get('playerId')!;
+    //TODO
     // cargar getObjective(playerId)
     }
 

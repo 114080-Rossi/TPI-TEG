@@ -59,10 +59,7 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(credenciales).subscribe({
       next: (response) => {
-
-        // 1) guarda en sessionStorage
         sessionStorage.setItem('playerId', response.id.toString());
-        // 2) navega a /home/:playerId
         this.router.navigate(['/home', response.id]);
       },
       error: () => {
