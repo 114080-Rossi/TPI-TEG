@@ -1,8 +1,10 @@
-import { Component, AfterViewInit } from '@angular/core';
+import {Component, AfterViewInit, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BoardService } from 'app/core/services/board.services';
 import { CountryDTO } from 'app/core/models/board.models/country-dto';
 import { FormsModule } from '@angular/forms';
+import {StartGameDTO} from 'app/core/models/game/startGame';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-board',
@@ -11,15 +13,25 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './board.html',
   styleUrls: ['./board.css'],
 })
-export class BoardComponent implements AfterViewInit {
+export class BoardComponent implements OnInit, AfterViewInit {
   countries: CountryDTO[] = [];
   selectedCountryId: number | null = null;
   svgDoc: Document | null = null;
   selectedOriginId: number | null = null;
   selectedDestinationId: number | null = null;
   caminoActual: CountryDTO[] = [];
+  game!: StartGameDTO;
 
-  constructor(private boardService: BoardService) {}
+  constructor(
+    private boardService: BoardService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    const navigation = this.router.getCurrentNavigation();
+    this.game = navigation?.extras.state?.['game'] as StartGameDTO;
+    console.log('ngOnInit ejecutado');
+  }
 
   ngAfterViewInit(): void {
     const svgElement = document.getElementById('svgMap') as HTMLObjectElement;

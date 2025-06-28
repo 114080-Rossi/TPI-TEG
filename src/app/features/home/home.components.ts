@@ -133,7 +133,6 @@ export class HomeComponent {
 
     this.gameService.createNewGame(newGameRequest).subscribe({
       next: (response) => {
-        console.log('Respuesta del backend:', response);
         if (response && response.gameId !== undefined && response.gameId !== null) {
           this.router.navigate(['/waiting-room', response.gameId]);
         } else {

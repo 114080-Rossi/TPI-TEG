@@ -7,10 +7,13 @@
   <p><strong>Turno:</strong> {{ gameData.turnState }}</p>
   <p><strong>Número de jugadores:</strong> {{ gameData.numberPlayer }}</p>
   <div class="button-group">
+
     <button class="start-btn"
-            [disabled]="!canStartGame()">
+            [disabled]="!canStartGame()"
+            (click)="startGame()">
       Empezar partida
     </button>
-    <button class="cancel-btn">Cancelar partida</button>
+
+    <button class="cancel-btn" (click)="cancelGame()">Cancelar partida</button>
   </div>
 </div>

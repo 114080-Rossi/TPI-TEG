@@ -4,6 +4,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {backUrl} from '../../../../env';
 import {GameDTO, GameHistory, NewGameRequestDTO, NewGameResponseDTO, PlayerNewDTO} from '../models/game/game.model';
+import {StartGameDTO} from 'app/core/models/game/startGame';
 
 
 @Injectable({providedIn: 'root'})
@@ -34,6 +35,13 @@ export class GameService {
         gamePlayerDTOList: response.game_players
       }))
     );
+  }
+
+  /**
+   * Post game start -> Empezar Game
+   */
+  startGame(gameId: number): Observable<StartGameDTO> {
+    return this.http.post<StartGameDTO>(`${this.apiUrl}/${gameId}/start`, {});
   }
 
     /**
@@ -75,5 +83,7 @@ export class GameService {
       }))
     );
   }
+
+
 
 }

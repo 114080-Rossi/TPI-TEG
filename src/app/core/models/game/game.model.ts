@@ -1,4 +1,10 @@
-// Interfaces para los DTO
+export enum TurnState {
+  STARTED = 'STARTED',
+  FINISHED = 'FINISHED',
+  PAUSE = 'PAUSE',
+  CANCELED = 'CANCELED'
+}
+
 export interface NewGameRequestDTO {
   created_by_player_id: number;
   amount_bot: number;
@@ -23,7 +29,7 @@ export interface GameHistory {
   gameId: number;
   localDateTime: string;
   difficultyLevel: string;
-  status: string;
+  status: TurnState;
   numberPlayer: number;
 }
 
@@ -32,6 +38,6 @@ export interface GameDTO {
   localDateTime: string;
   difficultyLevel: string;
   status: string;
-  turnState: any; // o el tipo correcto si tienes el modelo TurnState
+  turnState: TurnState;
   numberPlayer: number;
 }
