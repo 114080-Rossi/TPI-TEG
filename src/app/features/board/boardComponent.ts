@@ -6,10 +6,12 @@ import { FormsModule } from '@angular/forms';
 import {PlayerinfoComponent} from 'app/features/PlayerInfo/playerinfo.component';
 import {ActivatedRoute} from '@angular/router';
 import { AttackModalComponent } from './attack-modal/attack-modal.component';
+import { RegroupModalComponent } from './regroup-modal/regroup-modal.component';
+
 
 @Component({
   standalone: true,
-  imports:    [ CommonModule, FormsModule, PlayerinfoComponent, AttackModalComponent ],
+  imports:    [ CommonModule, FormsModule, PlayerinfoComponent, AttackModalComponent, RegroupModalComponent ],
   selector:   'app-board',
   templateUrl:'./board.html',
   styleUrls: ['./board.css'],
@@ -207,10 +209,18 @@ export class BoardComponent implements OnInit, AfterViewInit {
     this.modalAtaqueAbierto = false;
   }
 
+  modalRegroupAbierto = false;
   /** Se disparará al hacer click en “Reagrupar” */
   regroup(): void {
     console.log('regroup pulsado');
-    //TODO
+    this.modalRegroupAbierto = true;
+  }
+
+  onRegroupConfirm(event: { from: number, to: number, armies: number }) {
+    // Llama aquí al BoardService con el endpoint de /turns/regroup
+    // this.boardService.regroup(this.gameId, this.playerId, event.from, event.to, event.armies).subscribe(...);
+    console.log('Reagrupación:', event);
+    this.modalRegroupAbierto = false;
   }
 
   /** Se disparará al hacer click en “Terminar Turno” */

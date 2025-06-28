@@ -50,3 +50,10 @@
   (close)="modalAtaqueAbierto = false"
   (confirm)="onAttackConfirm($event)">
 </app-attack-modal>
+
+<app-regroup-modal
+  [countries]="countries"
+  [open]="modalRegroupAbierto"
+  (close)="modalRegroupAbierto = false"
+  (confirm)="onRegroupConfirm($event)">
+</app-regroup-modal>
