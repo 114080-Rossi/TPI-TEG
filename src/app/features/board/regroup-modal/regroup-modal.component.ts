@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CountryDTO } from 'app/core/models/board.models/country-dto';
 import {FormsModule} from '@angular/forms';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 
 
 @Component({
@@ -9,7 +9,8 @@ import {NgForOf, NgIf} from '@angular/common';
   imports: [
     FormsModule,
     NgForOf,
-    NgIf
+    NgIf,
+    NgOptimizedImage
   ],
   templateUrl: './regroup-modal.component.html',
   styleUrl: './regroup-modal.component.css',

@@ -71,3 +71,10 @@ button:hover {
   background: #ffd700;
   color: #15325b;
 }
+
+.modal-hero {
+  display: block;
+  margin: 0 auto 1em auto;
+  width: 128px;
+  height: 128px;
+}

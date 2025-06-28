@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CountryDTO } from 'app/core/models/board.models/country-dto';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {Assignment} from 'app/core/models/assignments/assignment.model';
 
@@ -9,7 +9,8 @@ import {Assignment} from 'app/core/models/assignments/assignment.model';
   imports: [
     NgIf,
     FormsModule,
-    NgForOf
+    NgForOf,
+    NgOptimizedImage
   ],
   templateUrl: './distribute-armies-modal.component.html',
   styleUrl: './distribute-armies-modal.component.css'

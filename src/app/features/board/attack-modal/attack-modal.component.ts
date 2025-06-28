@@ -1,12 +1,12 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CountryDTO } from 'app/core/models/board.models/country-dto';
 import {FormsModule} from '@angular/forms';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 
 
 @Component({
   selector: 'app-attack-modal',
-  imports: [FormsModule, NgIf, NgForOf],
+  imports: [FormsModule, NgIf, NgForOf, NgOptimizedImage],
   templateUrl: './attack-modal.component.html',
   styleUrl: './attack-modal.component.css',
   standalone: true
