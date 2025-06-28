@@ -1,30 +1,60 @@
-import { Component, AfterViewInit } from '@angular/core';
+import {Component, AfterViewInit, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BoardService } from 'app/core/services/board.services';
 import { CountryDTO } from 'app/core/models/board.models/country-dto';
 import { FormsModule } from '@angular/forms';
+import {PlayerinfoComponent} from 'app/features/PlayerInfo/playerinfo.component';
+import {ActivatedRoute} from '@angular/router';
+import { AttackModalComponent } from './attack-modal/attack-modal.component';
+import { RegroupModalComponent } from './regroup-modal/regroup-modal.component';
+import { DistributeArmiesModalComponent } from './distribute-armies-modal/distribute-armies-modal.component';
+import {Assignment} from 'app/core/models/assignments/assignment.model';
 
 
 @Component({
-  selector: 'app-board',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './board.html',
+  imports: [CommonModule, FormsModule, PlayerinfoComponent, AttackModalComponent, RegroupModalComponent, DistributeArmiesModalComponent],
+  selector:   'app-board',
+  templateUrl:'./board.html',
   styleUrls: ['./board.css'],
 })
-export class BoardComponent implements AfterViewInit {
+export class BoardComponent implements OnInit, AfterViewInit {
   countries: CountryDTO[] = [];
   selectedCountryId: number | null = null;
   svgDoc: Document | null = null;
   selectedOriginId: number | null = null;
   selectedDestinationId: number | null = null;
   caminoActual: CountryDTO[] = [];
+  gameId!:   number;
+  playerId!: number;
+  objective = '📝 Objetivo de ejemplo';
 
-  constructor(private boardService: BoardService) {}
+  constructor(private boardService: BoardService,private route: ActivatedRoute) {}
+
+  playSound(file: string, duration?: number) {
+    const audio = new Audio();
+    audio.src = `assets/sounds/${file}`;
+    audio.load();
+    if (duration) {
+      audio.addEventListener('play', () => {
+        setTimeout(() => {
+          audio.pause();
+          audio.currentTime = 0;
+        }, duration * 1500);
+      });
+    }
+    audio.play();
+  }
+
+  ngOnInit(): void {
+    this.gameId   = +this.route.snapshot.paramMap.get('gameId')!;
+    this.playerId = +this.route.snapshot.paramMap.get('playerId')!;
+    //TODO
+    // cargar getObjective(playerId)
+    }
 
   ngAfterViewInit(): void {
     const svgElement = document.getElementById('svgMap') as HTMLObjectElement;
-
 
       if (!svgElement) {
         console.error('❌ No se encontró el elemento SVG');
@@ -53,8 +83,6 @@ export class BoardComponent implements AfterViewInit {
       svgElement.addEventListener('load', onLoad);
     }
   }
-
-
 
   mostrarCamino(): void {
     if (!this.selectedOriginId || !this.selectedDestinationId) {
@@ -98,8 +126,6 @@ export class BoardComponent implements AfterViewInit {
     }, 500);
   }
 
-
-
   pintarMapa(): void {
     if (!this.svgDoc) return;
 
@@ -136,7 +162,6 @@ export class BoardComponent implements AfterViewInit {
     });
   }
 
-
   actualizarSeleccion(): void {
     if (!this.svgDoc) return;
 
@@ -163,7 +188,6 @@ export class BoardComponent implements AfterViewInit {
     });
   }
 
-
   seleccionarPorId(id: number): void {
     console.log('🖱️ Selección del país con ID:', id);
 
@@ -184,5 +208,56 @@ export class BoardComponent implements AfterViewInit {
       console.warn(`❌ País no encontrado con ID: ${id}`);
     }
   }
+  rollDice(): void {
+    console.log('rollDice pulsado');
+    //TODO
+  }
 
+  modalAtaqueAbierto = false;
+  /** Se disparará al hacer click en “Atacar” */
+  attack(): void {
+    this.playSound('espada_ataque.wav', 0.5);
+    console.log('attack pulsado');
+    this.modalAtaqueAbierto = true;
+  }
+
+  onAttackConfirm(event: { from: number, to: number, armies: number }) {
+    // solo para test, luego llamas al servicio aquí
+    console.log('Confirmado ataque:', event);
+    this.modalAtaqueAbierto = false;
+  }
+
+  modalRegroupAbierto = false;
+  /** Se disparará al hacer click en “Reagrupar” */
+  regroup(): void {
+    this.playSound('army_regroup.wav', 1);
+    console.log('regroup pulsado');
+    this.modalRegroupAbierto = true;
+  }
+
+  onRegroupConfirm(event: { from: number, to: number, armies: number }) {
+    // Llama aquí al BoardService con el endpoint de /turns/regroup
+    // this.boardService.regroup(this.gameId, this.playerId, event.from, event.to, event.armies).subscribe(...);
+    console.log('Reagrupación:', event);
+    this.modalRegroupAbierto = false;
+  }
+
+  modalDistributeOpen = false;
+  distributeArmies(): void {
+    this.playSound('army_insert.wav', 1);
+    console.log('Repartir Ejército pulsado');
+    this.modalDistributeOpen = true;
+  }
+
+  onDistributeConfirm(assignments: Assignment[]) {
+    console.log('Reparto final:', assignments);
+    this.modalDistributeOpen = false;
+    // Aquí llamas al backend, procesas el resultado, etc.
+  }
+
+  /** Se disparará al hacer click en “Terminar Turno” */
+  endTurn(): void {
+    console.log('endTurn pulsado');
+    //TODO
+  }
 }
