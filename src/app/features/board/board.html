@@ -1,30 +1,45 @@
-<h2>MAPA DEL TEG</h2>
+<div class="board-container">
+  <!-- IZQUIERDA: el mapa y controles antiguos -->
+  <div class="map-panel">
+    <h2>MAPA DEL TEG</h2>
+    <object
+      id="svgMap"
+      type="image/svg+xml"
+      data="assets/board-TEG_final.svg"
+      width="100%"
+      height="600px">
+    </object>
 
+    <!-- tus botones de selección y mostrar camino -->
+    <div style="margin-top:20px;" *ngIf="countries.length">
+      <button (click)="seleccionarPorId(11)">Seleccionar Argentina</button>
+      <button (click)="seleccionarPorId(1)">Seleccionar Canadá</button>
+    </div>
 
-<object id="svgMap" type="image/svg+xml" data="assets/board-TEG_final.svg" width="100%" height="600px"></object>
+    <select [(ngModel)]="selectedOriginId">
+      <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
+    </select>
+    <select [(ngModel)]="selectedDestinationId">
+      <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
+    </select>
+    <button (click)="mostrarCamino()">🧭 Mostrar camino</button>
 
-<div style="margin-top: 20px;">
-  <div *ngIf="countries.length">
-    <button (click)="seleccionarPorId(11)">Seleccionar Argentina</button>
-    <button (click)="seleccionarPorId(1)">Seleccionar Canadá</button>
+    <div *ngIf="caminoActual.length">
+      <h3>Camino encontrado:</h3>
+      <ul>
+        <li *ngFor="let paso of caminoActual">{{ paso.name }}</li>
+      </ul>
+    </div>
   </div>
-</div>
 
-<!-- Selectores -->
-<select [(ngModel)]="selectedOriginId">
-  <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
-</select>
-
-<select [(ngModel)]="selectedDestinationId">
-  <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
-</select>
-
-<button (click)="mostrarCamino()">🧭 Mostrar camino</button>
-
-<!-- Resultado -->
-<div *ngIf="caminoActual.length">
-  <h3>Camino encontrado:</h3>
-  <ul>
-    <li *ngFor="let paso of caminoActual">{{ paso.name }}</li>
-  </ul>
+  <!-- DERECHA: el componente hijo -->
+  <div class="info-panel">
+    <app-player-info
+      [objective]="objective"
+      (rollDice)="rollDice()"
+      (attack)="attack()"
+      (regroup)="regroup()"
+      (endTurn)="endTurn()"
+    ></app-player-info>
+  </div>
 </div>

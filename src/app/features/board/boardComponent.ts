@@ -1,25 +1,36 @@
-import { Component, AfterViewInit } from '@angular/core';
+import {Component, AfterViewInit, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BoardService } from 'app/core/services/board.services';
 import { CountryDTO } from 'app/core/models/board.models/country-dto';
 import { FormsModule } from '@angular/forms';
+import {PlayerinfoComponent} from 'app/features/PlayerInfo/playerinfo.component';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
-  selector: 'app-board',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './board.html',
+  imports:    [ CommonModule, FormsModule, PlayerinfoComponent ],
+  selector:   'app-board',
+  templateUrl:'./board.html',
   styleUrls: ['./board.css'],
 })
-export class BoardComponent implements AfterViewInit {
+export class BoardComponent implements OnInit, AfterViewInit {
   countries: CountryDTO[] = [];
   selectedCountryId: number | null = null;
   svgDoc: Document | null = null;
   selectedOriginId: number | null = null;
   selectedDestinationId: number | null = null;
   caminoActual: CountryDTO[] = [];
+  gameId!:   number;
+  playerId!: number;
+  objective = '📝 Objetivo de ejemplo';
 
-  constructor(private boardService: BoardService) {}
+  constructor(private boardService: BoardService,private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.gameId   = +this.route.snapshot.paramMap.get('gameId')!;
+    this.playerId = +this.route.snapshot.paramMap.get('playerId')!;
+    // cargar getObjective(playerId)
+    }
 
   ngAfterViewInit(): void {
     const svgElement = document.getElementById('svgMap') as HTMLObjectElement;
@@ -175,5 +186,27 @@ export class BoardComponent implements AfterViewInit {
     } else {
       console.warn(`❌ País no encontrado con ID: ${id}`);
     }
+  }
+  rollDice(): void {
+    console.log('rollDice pulsado');
+    //TODO
+  }
+
+  /** Se disparará al hacer click en “Atacar” */
+  attack(): void {
+    console.log('attack pulsado');
+    //TODO
+  }
+
+  /** Se disparará al hacer click en “Reagrupar” */
+  regroup(): void {
+    console.log('regroup pulsado');
+    //TODO
+  }
+
+  /** Se disparará al hacer click en “Terminar Turno” */
+  endTurn(): void {
+    console.log('endTurn pulsado');
+    //TODO
   }
 }

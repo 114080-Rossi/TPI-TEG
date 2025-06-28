@@ -60,7 +60,10 @@ export class LoginComponent implements OnInit {
     this.authService.login(credenciales).subscribe({
       next: (response) => {
 
-        this.router.navigate(['/home']);
+        // 1) guarda en sessionStorage
+        sessionStorage.setItem('playerId', response.id.toString());
+        // 2) navega a /home/:playerId
+        this.router.navigate(['/home', response.id]);
       },
       error: () => {
         this.errorMessage = 'Asegurate de que el usuario exista o revisa tu usuario y contraseña';

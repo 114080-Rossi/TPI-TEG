@@ -1,0 +1,12 @@
+<!-- src/app/features/player-info/player-info.component.html -->
+<div class="player-info-card">
+  <h3>Objetivo</h3>
+  <p class="objective-text">{{ objective }}</p>
+
+  <div class="action-buttons">
+    <button (click)="rollDice.emit()">🎲 Tirar Dados</button>
+    <button (click)="attack.emit()">⚔️ Atacar</button>
+    <button (click)="regroup.emit()">🔄 Reagrupar</button>
+    <button (click)="endTurn.emit()">⏭️ Finalizar Turno</button>
+  </div>
+</div>
