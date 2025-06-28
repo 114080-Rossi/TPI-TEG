@@ -12,7 +12,9 @@ import {StartGameDTO} from 'app/core/models/game/startGame';
   styleUrl: './waiting-room.component.css'
 })
 export class WaitingRoomComponent implements OnInit {
-  gameId!: number;
+  gameId: number | null = null;
+  playerId: number| null = null;
+
   @Input() gameData: any | GameDTO;
 
   constructor(
@@ -23,20 +25,31 @@ export class WaitingRoomComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      const id = params.get('gameId');
-      console.log('ngOnInit ejecutado: '+ id);
-      if (id) {
-        this.gameId = +id;
-        this.loadWaitingRoomData();
-      }
+      // const id = params.get('gameId');
+      // if (id) {
+      //   this.gameId = +id;
+      //   this.loadWaitingRoomData();
+      // }
+      const paramGameId = this.route.snapshot.paramMap.get('gameId');
+      this.gameId = paramGameId != null ? Number(paramGameId) : null;
+      console.log('ngOnInit ejecutado: '+ this.gameId);
+
+      const param = this.route.snapshot.paramMap.get('id');
+      this.playerId = param != null ? Number(param) : null;
+
+      this.loadWaitingRoomData();
     });
   }
 
   cancelGame(): void {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/home', this.playerId]);
   }
 
   loadWaitingRoomData() {
+    if (this.gameId === null){
+      console.error('gameId es null en loadWaitingRoomData');
+      return;
+    }
     this.gameService.getGameById(this.gameId).subscribe({
       next: (data: GameDTO) => {
         this.gameData = data;
@@ -47,7 +60,6 @@ export class WaitingRoomComponent implements OnInit {
 
   canStartGame(): boolean {
     console.log('canStartGame numberPlayer: '+ this.gameData.numberPlayer);
-
     return this.gameData && this.gameData.numberPlayer >= 3 && this.gameData.numberPlayer < 6
   }
 
@@ -56,13 +68,12 @@ export class WaitingRoomComponent implements OnInit {
       .subscribe({
         next: (response: StartGameDTO) => {
           console.log('ngOnInit ejecutado');
-          this.router.navigate(['/board'], { state: { game: response } });
+          this.router.navigate(['/board', this.gameId , this.playerId], { state: { game: response } });
         },
         error: (err) => {
           console.error('Error al iniciar partida:', err);
         }
       });
   }
-
 
 }

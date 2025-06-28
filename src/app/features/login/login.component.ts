@@ -48,6 +48,7 @@ export class LoginComponent implements OnInit {
    * Si falla, muestra un mensaje de error.
    */
   onSubmit(): void {
+
     if (this.loginForm.invalid) {
       return;
     }

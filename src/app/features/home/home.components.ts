@@ -1,15 +1,15 @@
-import {GameService} from 'app/core/services/game.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule }      from '@angular/common';
 import {  FormBuilder,  FormGroup,  ReactiveFormsModule,  Validators} from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { GameService, NewGameRequestDTO } from 'app/core/services/game.service';
-
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import { GameService } from 'app/core/services/game.service';
 import {GameHistory, NewGameRequestDTO} from 'app/core/models/game/game.model';
+
+// import { Component } from '@angular/core';
+// import { CommonModule } from '@angular/common';
+// import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+// import {Router} from '@angular/router';
+// import {GameHistory, NewGameRequestDTO} from 'app/core/models/game/game.model';
 
 
 enum Colors {
@@ -65,7 +65,7 @@ export class HomeComponent implements OnInit {
   currentDate: Date = new Date();
   joinGameId: number | null = null;
   showJoinGameForm = false;
-  playerId!: number;
+  playerId: number| null = null;
 
   colorOptions = [
     { value: "RED",    label: "RED" },
@@ -95,8 +95,10 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    //this.playerId = +this.route.snapshot.paramMap.get('playerId')!;
+    const param = this.route.snapshot.paramMap.get('id');
+    this.playerId = param != null ? Number(param) : null;
 
-    this.playerId = +this.route.snapshot.paramMap.get('playerId')!;
     this.loadSavedGames();  // ya con playerId correcto
   }
 
@@ -147,10 +149,20 @@ export class HomeComponent implements OnInit {
 
     const formValue = this.newGameForm.value;
     //const playerId = 1063 //Number(sessionStorage.getItem('playerId')); // TODO Reemplaza con el ID real del jugador sessionstorage
+
+    const difficulty = this.newGameForm.get('difficulty')!.value as 'easy'|'medium'|'expert';
+    const color      = this.newGameForm.get('color')!.value      as keyof typeof colorMap;
+    const botCount   = Number(this.newGameForm.get('botCount')!.value);
+
+    if (this.playerId === null){
+      console.error('playerId es null en onStartNewGame');
+      return;
+    }
+
     const newGameRequest: NewGameRequestDTO = {
-      color_id: colorMap[formValue.color],
-      game_difficulty: difficultyMap[formValue.difficulty],
-      amount_bot: Number(formValue.botCount),
+      color_id: colorMap[color],
+      game_difficulty: difficultyMap[difficulty],
+      amount_bot: botCount,
       created_by_player_id: this.playerId
     };
 
@@ -160,14 +172,11 @@ export class HomeComponent implements OnInit {
           const gameId = (response as any).gameId ?? (response as any).game_id;
           //this.router.navigate(['/waiting-room', response.gameId]);
           this.router.navigate(['/waiting-room', gameId, this.playerId]);  // <-- ambos IDs
-          
+
         } else {
           console.error('gameId es undefined o null en la respuesta');
         }
 // =======
-//     const difficulty = this.newGameForm.get('difficulty')!.value as 'easy'|'medium'|'expert';
-//     const color      = this.newGameForm.get('color')!.value      as keyof typeof colorMap;
-//     const botCount   = Number(this.newGameForm.get('botCount')!.value);
 
 //     const dto: NewGameRequestDTO = {
 //       created_by_player_id: this.playerId,
@@ -216,8 +225,12 @@ export class HomeComponent implements OnInit {
   }
 
   loadSavedGames() {
-    const playerId = 1063; // TODO: Reemplaza con el ID real del jugador
-    this.gameService.getGamesByPlayer(playerId).subscribe({
+    //const playerId = 1063; // TODO: Reemplaza con el ID real del jugador
+    if (this.playerId === null){
+      console.error('playerId es null en loadSavedGames');
+      return;
+    }
+    this.gameService.getGamesByPlayer(this.playerId).subscribe({
       next: (games) => {
         this.savedGames = games.map(game => ({
           gameId: game.gameId,
@@ -248,7 +261,5 @@ export class HomeComponent implements OnInit {
   irAlTablero() {
     this.router.navigate(['/board']);
   }
-
-
 
 }

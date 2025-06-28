@@ -30,8 +30,8 @@ export class BoardComponent implements OnInit, AfterViewInit {
   selectedDestinationId: number | null = null;
   caminoActual: CountryDTO[] = [];
   game!: StartGameDTO;
-  gameId!:   number;
-  playerId!: number;
+  gameId:   number | null = null;
+  playerId: number | null = null;
   objective = '📝 Objetivo de ejemplo';
 
   constructor(
@@ -45,8 +45,13 @@ export class BoardComponent implements OnInit, AfterViewInit {
     const navigation = this.router.getCurrentNavigation();
     this.game = navigation?.extras.state?.['game'] as StartGameDTO;
     console.log('ngOnInit ejecutado');
-    this.gameId   = +this.route.snapshot.paramMap.get('gameId')!;
-    this.playerId = +this.route.snapshot.paramMap.get('playerId')!;
+
+    //this.gameId   = +this.route.snapshot.paramMap.get('gameId')!;
+    const paramGameId = this.route.snapshot.paramMap.get('gameId');
+    this.gameId = paramGameId != null ? Number(paramGameId) : null;
+
+    const paramPlayerId = this.route.snapshot.paramMap.get('id');
+    this.playerId = paramPlayerId != null ? Number(paramPlayerId) : null;
   }
 
     playSound(file: string, duration?: number) {

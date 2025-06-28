@@ -9,9 +9,9 @@ import {RegisterComponent} from 'app/features/register/register.component';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'home', component: HomeComponent },
-  { path: 'board', component: BoardComponent },
-  { path: 'waiting-room/:gameId', component: WaitingRoomComponent },
+  { path: 'home/:id', component: HomeComponent },
+  { path: 'board/:gameId/:id', component: BoardComponent },
+  { path: 'waiting-room/:gameId/:id', component: WaitingRoomComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
 
