@@ -1,6 +1,6 @@
 [build]
 command = "ng build --configuration production"
-publish = "dist/tpi-teg-fe-tpi-teg"
+publish = "dist/tpi-teg-fe-tpi-teg/browser"
 
 [[redirects]]
 from = "/api/*"
