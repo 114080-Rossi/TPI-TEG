@@ -22,5 +22,4 @@ export class BoardService {
   findPath(fromId: number, toId: number): Observable<CountryDTO[]> {
     return this.http.get<CountryDTO[]>(this.apiUrl + `/findpath/${fromId}/${toId}`);
   }
-
 }

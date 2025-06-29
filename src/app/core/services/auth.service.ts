@@ -15,7 +15,6 @@ export class AuthService {
    */
   private BASE_URL = backUrl;
   constructor(private http: HttpClient) {}
-
   /**
    * Envia credenciales al backend para iniciar sesion.
    * @param data Objeto con username y password

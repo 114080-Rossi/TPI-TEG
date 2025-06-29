@@ -6,21 +6,20 @@ import {backUrl} from '../../../../env';
 import {GameDTO, GameHistory, NewGameRequestDTO, NewGameResponseDTO, PlayerNewDTO} from '../models/game/game.model';
 import {StartGameDTO} from 'app/core/models/game/startGame';
 
-
 @Injectable({providedIn: 'root'})
 export class GameService {
-
   /**
    * URL base de la API backend.
    */
   private apiUrl = backUrl + `/games`;
 
-  constructor(private http: HttpClient,) {}
+  constructor(private http: HttpClient) {}
 
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
       'ngrok-skip-browser-warning': 'true'
+
     })
   };
 
