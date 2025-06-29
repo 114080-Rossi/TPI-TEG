@@ -1,0 +1,29 @@
+<div class="modal" *ngIf="open">
+  <div class="modal-content">
+    <img src="assets/images/result_sword.png" alt="Resultado" class="result-hero">
+    <h3>Resultado del ataque</h3>
+    <div class="dice-table">
+      <div class="dice-column">
+        <h4>Atacante</h4>
+        <div *ngFor="let dice of result.attackerDice">
+          <span class="dice">{{ dice }}</span>
+        </div>
+        <div>Ejércitos perdidos: <b>{{ result.lostAttackerArmies }}</b></div>
+      </div>
+      <div class="dice-column">
+        <h4>Defensor</h4>
+        <div *ngFor="let dice of result.defenderDice">
+          <span class="dice">{{ dice }}</span>
+        </div>
+        <div>Ejércitos perdidos: <b>{{ result.lostDefenderArmies }}</b></div>
+      </div>
+    </div>
+    <hr>
+    <div class="winner">
+      <span *ngIf="result.conquered; else noWin">¡El atacante conquista el país!</span>
+      <ng-template #noWin>El defensor mantiene el país.</ng-template>
+    </div>
+    <div class="log-msg">{{ result.message }}</div>
+    <button (click)="close.emit()">Cerrar ventana</button>
+  </div>
+</div>

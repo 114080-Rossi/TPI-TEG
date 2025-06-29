@@ -1,28 +1,33 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<div class="sword-column left">
+  <div *ngFor="let _ of swords">⚔</div>
+</div>
+<div class="sword-column right">
+  <div *ngFor="let _ of swords">⚔</div>
+</div>
+
 <div class="game-menu-container">
   <div class="header">
-    <h1>New GAME</h1>
+    <h1>Ready To Play?</h1>
   </div>
 
   <!-- Botones principales -->
-  <div class="main-buttons" *ngIf="!showNewGameForm && !showLoadGameList && !showJoinGameForm">
-    <button
-      class="btn btn-primary btn-large"
-      (click)="onNewGame()">
-      <i class="icon-plus"></i>
+  <div class="main-buttons"
+       *ngIf="!showNewGameForm && !showLoadGameList && !showJoinGameForm">
+
+    <button class="btn" (click)="onNewGame()">
+      <i class="fa-solid fa-plus"></i>
       New Game
     </button>
 
-    <button
-      class="btn btn-secondary btn-large"
-      (click)="onLoadGame()">
-      <i class="icon-folder"></i>
+    <button class="btn" (click)="onLoadGame()">
+      <i class="fa-solid fa-rotate-right"></i>
       Load Game
     </button>
 
-    <button
-      class="btn btn-secondary btn-large"
-      (click)="onJoinGame()">
-      <i class="icon-plus"></i>
+    <button class="btn" (click)="onJoinGame()">
+      <i class="fa-solid fa-users"></i>
       Join Game
     </button>
 
@@ -172,5 +177,4 @@
         <p>No hay juegos guardados</p>
       </div>
     </ng-template>
-
 </div>

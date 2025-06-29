@@ -1,0 +1,10 @@
+<div class="modal" *ngIf="open">
+  <div class="modal-content">
+    <img src="assets/images/end_turn.png" alt="Finalizar turno" class="endturn-hero">
+    <h3>¿Seguro que desea terminar el turno?</h3>
+    <div class="actions">
+      <button (click)="confirm.emit()" class="yes">Sí</button>
+      <button (click)="cancel.emit()" class="no">No</button>
+    </div>
+  </div>
+</div>

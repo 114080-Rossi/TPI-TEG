@@ -1,0 +1,57 @@
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(13,41,69,0.58);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+.modal-content {
+  background: #15325b;
+  color: #fff;
+  padding: 2.2em 2.5em;
+  border-radius: 16px;
+  min-width: 340px;
+  box-shadow: 0 8px 30px #0003;
+  border: 2px solid #2985d1;
+  text-align: center;
+}
+.actions {
+  margin-top: 2em;
+  display: flex;
+  gap: 2.5em;
+  justify-content: center;
+}
+.yes, .no {
+  font-size: 1em;
+  padding: 0.4em 2em;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.yes {
+  background: #ffd700;
+  color: #15325b;
+}
+.no {
+  background: #224574;
+  color: #fff;
+}
+.yes:hover {
+  background: #15325b;
+  color: #ffd700;
+}
+.no:hover {
+  background: #ffd700;
+  color: #15325b;
+}
+
+.endturn-hero {
+  display: block;
+  margin: 0 auto 1.2em auto;
+  width: 128px;
+  height: auto;
+}

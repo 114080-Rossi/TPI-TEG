@@ -4,7 +4,7 @@ publish = "dist/tpi-teg-fe-tpi-teg/browser"
 
 [[redirects]]
 from = "/api/*"
-to = "https://79c9-2803-9800-9897-91b5-c814-db61-a259-114a.ngrok-free.app/:splat"
+to = "https://79c9-2803-9800-9897-91b5-c814-db61-a259-114a.ngrok-free.app"
 status = 200
 force = true
 

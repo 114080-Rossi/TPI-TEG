@@ -6,6 +6,7 @@ import {backUrl} from '../../../../env';
 import {GameDTO, GameHistory, NewGameRequestDTO, NewGameResponseDTO, PlayerNewDTO} from '../models/game/game.model';
 import {StartGameDTO} from 'app/core/models/game/startGame';
 
+
 @Injectable({providedIn: 'root'})
 export class GameService {
   /**
@@ -19,7 +20,6 @@ export class GameService {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
       'ngrok-skip-browser-warning': 'true'
-
     })
   };
 
@@ -84,7 +84,4 @@ export class GameService {
       }))
     );
   }
-
-
-
 }
