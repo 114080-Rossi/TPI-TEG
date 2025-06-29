@@ -15,11 +15,12 @@ export class GameService {
    */
   private apiUrl = backUrl + `/games`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,) {}
 
   private httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'ngrok-skip-browser-warning': 'true'
     })
   };
 
@@ -42,19 +43,14 @@ export class GameService {
    * Post game start -> Empezar Game
    */
   startGame(gameId: number): Observable<StartGameDTO> {
-    return this.http.post<StartGameDTO>(`${this.apiUrl}/${gameId}/start`, {});
+    return this.http.post<StartGameDTO>(`${this.apiUrl}/${gameId}/start`, {}, this.httpOptions);
   }
 
     /**
      * Cargar todas las partida por ID del player
      */
     getGamesByPlayer(playerId: number): Observable<GameHistory[]> {
-      return this.http.get<any[]>(`${this.apiUrl}/history/${playerId}`,
-        {
-          headers: {
-            'ngrok-skip-browser-warning': 'true'
-          }
-        }).pipe(
+      return this.http.get<any[]>(`${this.apiUrl}/history/${playerId}`, this.httpOptions).pipe(
         map(games => games.map(game => ({
           gameId: game.game_id,
           localDateTime: game.game_created_at,
@@ -69,7 +65,7 @@ export class GameService {
    * Obtener id del game creado
    */
   getJoinGameNumber(): Observable<number> {
-    return this.http.get<any>(`${this.apiUrl}/lastest`).pipe(
+    return this.http.get<any>(`${this.apiUrl}/lastest`, this.httpOptions).pipe(
       map(res => res.game_id)
     );
   }
@@ -78,7 +74,7 @@ export class GameService {
    * Obtener game por Id
    */
   getGameById(gameId: number): Observable<GameDTO> {
-    return this.http.get<any>(`${this.apiUrl}/${gameId}`).pipe(
+    return this.http.get<any>(`${this.apiUrl}/${gameId}`, this.httpOptions).pipe(
       map(response => ({
         gameId: response.game_id,
         localDateTime: response.game_created_at,
