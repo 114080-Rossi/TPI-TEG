@@ -9,6 +9,7 @@ import {StartGameDTO} from 'app/core/models/game/startGame';
 
 @Injectable({providedIn: 'root'})
 export class GameService {
+
   /**
    * URL base de la API backend.
    */
@@ -48,7 +49,12 @@ export class GameService {
      * Cargar todas las partida por ID del player
      */
     getGamesByPlayer(playerId: number): Observable<GameHistory[]> {
-      return this.http.get<any[]>(`${this.apiUrl}/history/${playerId}`).pipe(
+      return this.http.get<any[]>(`${this.apiUrl}/history/${playerId}`,
+        {
+          headers: {
+            'ngrok-skip-browser-warning': 'true'
+          }
+        }).pipe(
         map(games => games.map(game => ({
           gameId: game.game_id,
           localDateTime: game.game_created_at,
