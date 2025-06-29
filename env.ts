@@ -1,6 +1,6 @@
 const developmentUrl = 'http://localhost:8081';
 
-const productionUrl = 'https://2afc-2803-9800-9897-91b5-d08e-2075-fbcd-41e1.ngrok-free.app';
+const productionUrl = 'https://2afc-2803-9800-9897-91b5-d08e-2075-fbcd-41e1.ngrok-free.app/api';
 
 const production = true;
 
