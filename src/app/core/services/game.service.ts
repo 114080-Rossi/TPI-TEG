@@ -48,9 +48,16 @@ export class GameService {
      * Cargar todas las partida por ID del player
      */
     getGamesByPlayer(playerId: number): Observable<GameHistory[]> {
-      return this.http.get<GameHistory[]>(`${this.apiUrl}/games/history/${playerId}`, {
-        responseType: 'json'
-      })}
+      return this.http.get<any[]>(`${this.apiUrl}/history/${playerId}`).pipe(
+        map(games => games.map(game => ({
+          gameId: game.game_id,
+          localDateTime: game.game_created_at,
+          difficultyLevel: game.game_difficulty,
+          status: game.game_status,
+          numberPlayer: game.number_players
+        })))
+      );
+    }
 
   /**
    * Obtener id del game creado
