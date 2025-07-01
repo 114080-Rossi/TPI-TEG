@@ -5,6 +5,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { GameService } from 'app/core/services/game.service';
 import {GameHistory, NewGameRequestDTO} from 'app/core/models/game/game.model';
 
+// import { Component } from '@angular/core';
+// import { CommonModule } from '@angular/common';
+// import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+// import {Router} from '@angular/router';
+// import {GameHistory, NewGameRequestDTO} from 'app/core/models/game/game.model';
+
+
 enum Colors {
   RED = 'RED',
   BLUE = 'BLUE',
@@ -59,8 +66,6 @@ export class HomeComponent implements OnInit {
   joinGameId: number | null = null;
   showJoinGameForm = false;
   playerId: number| null = null;
-
-  swords = Array.from({ length: 14 });
 
   colorOptions = [
     { value: "RED",    label: "RED" },

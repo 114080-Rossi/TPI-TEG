@@ -17,7 +17,6 @@ import {Assignment} from 'app/core/models/assignments/assignment.model';
 })
 export class DistributeArmiesModalComponent {
   @Input() open: boolean = false;
-  @Input() playerId: number | null = null;
   @Input() countries: CountryDTO[] = [];
   @Input() totalArmies: number = 0; // ¿Cuántos debe repartir el jugador?
   @Output() close = new EventEmitter<void>();
@@ -35,6 +34,8 @@ export class DistributeArmiesModalComponent {
   }
 
   get myAvailableCountries(): CountryDTO[] {
+    // Filtra solo países del jugador (si tienes ownerId) o todos los tuyos
+    // return this.countries.filter(c => c.ownerId === this.playerId);
     return this.countries;
   }
 

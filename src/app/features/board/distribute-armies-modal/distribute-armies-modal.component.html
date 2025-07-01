@@ -1,62 +1,45 @@
-<div class="modal-overlay" *ngIf="open" (click)="onClose()">
-
-  <div class="modal-window" (click)="$event.stopPropagation()">
-
-    <img ngSrc="assets/images/assign_troops.png"
-         alt="Asignar"
-         class="modal-hero"
-         height="1024" width="1024">
-
-    <h3>Distribute Armies</h3>
-
-    <p>Armies remaining: <b>{{ armiesLeft }}</b> / {{ totalArmies }}</p>
-
-    <label>Country:</label>
+<div class="modal" *ngIf="open">
+  <div class="modal-content">
+    <img ngSrc="assets/images/assign_troops.png" alt="Asignar" class="modal-hero" height="1024" width="1024">
+    <h3>Repartir Ejércitos</h3>
+    <div>
+      <span>Ejércitos por repartir: <b>{{ armiesLeft }}</b> / {{ totalArmies }}</span>
+    </div>
+    <br>
+    <label>País:</label>
     <select [(ngModel)]="selectedCountryId">
-      <option [ngValue]="null" disabled selected>Select country</option>
+      <option [ngValue]="null" disabled selected>Selecciona un país</option>
       <option *ngFor="let c of myAvailableCountries" [ngValue]="c.id">{{ c.name }}</option>
     </select>
 
-    <label>Armies:</label>
+    <label>Ejércitos:</label>
     <input type="number"
            [(ngModel)]="assignedArmies"
            [min]="1"
            [max]="armiesLeft"
-           [disabled]="!selectedCountryId || armiesLeft < 1" />
+           [disabled]="!selectedCountryId || armiesLeft < 1">
+    <button (click)="assign()" [disabled]="!selectedCountryId || assignedArmies < 1 || assignedArmies > armiesLeft">Asignar</button>
 
-    <button class="modal-btn primary"
-            (click)="assign()"
-            [disabled]="!selectedCountryId || assignedArmies < 1 || assignedArmies > armiesLeft">
-      Add
-    </button>
+    <hr>
 
-    <hr />
-
-    <div *ngIf="assignments.length > 0; else empty">
-      <h4>Current assignments</h4>
-      <ul class="modal-list">
+    <div *ngIf="assignments.length > 0">
+      <h4>Asignaciones realizadas:</h4>
+      <ul>
         <li *ngFor="let a of assignments; let i = index">
           <b>{{ a.countryName }}:</b> {{ a.armies }}
           <button class="remove" (click)="removeAssignment(i)">✖</button>
         </li>
       </ul>
     </div>
-    <ng-template #empty>
-      <span class="info">No armies assigned yet.</span>
-    </ng-template>
-
-    <div class="modal-btn-row">
-      <button class="modal-btn primary"
-              (click)="onConfirm()"
-              [disabled]="armiesLeft !== 0">
-        Confirm
-      </button>
-      <button class="modal-btn" (click)="onClose()">Close</button>
+    <div *ngIf="assignments.length === 0">
+      <span class="info">Aún no asignaste ejércitos</span>
     </div>
 
-    <div *ngIf="armiesLeft > 0" class="warning">
-      You must assign all armies before confirming.
+    <div class="buttons">
+      <button (click)="onConfirm()" [disabled]="armiesLeft !== 0">Confirmar Reparto</button>
+      <button (click)="onClose()">Cerrar</button>
     </div>
-
+    <div *ngIf="armiesLeft > 0" class="warning">Debes repartir todos los ejércitos antes de confirmar.</div>
   </div>
 </div>
+
