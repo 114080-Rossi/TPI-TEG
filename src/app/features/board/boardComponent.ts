@@ -59,6 +59,7 @@ type Phase = 'assign' | 'attack' | 'regroup';
 
 export class BoardComponent implements OnInit, AfterViewInit {
   countries: CountryDTO[] = [];
+  countries2: CountryDTO[] = [];
   selectedCountryId: number | null = null;
   svgDoc: Document | null = null;
   selectedOriginId: number | null = null;
@@ -100,7 +101,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // Pedí el estado actual solo una vez al entrar
+
     this.boardService.getFullGameStateAsAny(this.gameId!).subscribe((updatedGame) => {
       this.game = updatedGame;
       this.countries = Array.isArray(updatedGame.countries) ? updatedGame.countries : [];
@@ -307,7 +308,6 @@ export class BoardComponent implements OnInit, AfterViewInit {
     this.countries.forEach(country => {
       const baseId = String(country.id);
 
-      // BUSCAR ELEMENTOS DE FORMA MÁS EXHAUSTIVA
       const possibleIds = [
         baseId,
         `${baseId}b`,
@@ -335,38 +335,37 @@ export class BoardComponent implements OnInit, AfterViewInit {
 
         console.log(`🏳️ País ${country.name} (ID: ${country.id}) - Owner: ${owner ? `Jugador ${owner.player_id}` : 'Sin dueño'} - Color: ${fillColor} - Ejércitos: ${countryData?.country_army || 0}`);
 
-        // APLICAR ESTILOS Y EVENTOS A TODOS LOS ELEMENTOS ENCONTRADOS
+
         foundElements.forEach(element => {
-          // Verificar que el elemento tenga los métodos necesarios
+
           if (element && typeof element.setAttribute === 'function') {
             element.removeAttribute('style');
-            // Pintar con el color del jugador
-            // 1) sacamos el style inline que traía el SVG
+
             element.removeAttribute('style');
 
-            // 2) color de interior según jugador
+
             element.setAttribute('fill', fillColor);
 
-            // 3) borde: mismo color (o uno distinto si querés)
+
             element.setAttribute('stroke', fillColor);
             element.setAttribute('stroke-width', '2');
 
-            // Opcionales para redondear esquinas y puntas:
+
             element.setAttribute('stroke-linejoin', 'round');
             element.setAttribute('stroke-linecap', 'round');
 
-            // Solo aplicar cursor si el elemento tiene style
+
             if ((element as any).style) {
               (element as any).style.cursor = 'pointer';
             }
 
-            // CLONAR PARA LIMPIAR EVENTOS PREVIOS
+
             const newEl = element.cloneNode(true) as Element;
             if (element.parentNode) {
               element.parentNode.replaceChild(newEl, element);
             }
 
-            // Agregar eventos de interacción
+
             newEl.addEventListener('click', (event) => {
               event.preventDefault();
               event.stopPropagation();
@@ -393,7 +392,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
         paisesNoEncontrados++;
         console.warn(`❌ No se encontró ningún elemento SVG para ${country.name} (ID: ${baseId})`);
 
-        // Debug: mostrar algunos IDs disponibles para este país
+
         const availableIds = Array.from(allSvgElements)
           .map(el => el.id)
           .filter(id => id.includes(baseId) || baseId.includes(id))
@@ -683,12 +682,107 @@ export class BoardComponent implements OnInit, AfterViewInit {
     this.buttonsState[nextPhase] = true;
     console.log(`✅ Fase actual cambiada a: ${nextPhase}`);
 
-    this.refreshGameState();
+    this.miniPintarMapa();
   }
 
   private refreshGameState(): void {
     this.boardService.getFullGameStateAsAny(this.gameId!).subscribe((updatedGame) => {
     });
+  }
+
+
+  private miniPintarMapa(): void{
+    setTimeout(() => {
+      this.boardService.getBoard().subscribe((response) => {
+        this.countries2 = response.countries ?? response;
+      });
+    }, 100);
+    this.countries2.forEach(country => {
+      const baseId = String(country.id);
+
+      const possibleIds = [
+        baseId,
+        `${baseId}b`,
+        `country_${baseId}`,
+        `c${baseId}`,
+        `path${baseId}`,
+        baseId.padStart(2, '0'),
+        `${baseId.padStart(2, '0')}b`
+      ];
+
+      let foundElements: Element[] = []; // Cambiar SVGElement[] por Element[]
+
+      possibleIds.forEach(id => {
+        const element = this.svgDoc!.getElementById(id);
+        if (element) {
+          foundElements.push(element);
+        }
+      });
+
+      if (foundElements.length > 0) {
+
+        const fillColor = this.getCountryColor(country.id);
+        const {owner, countryData} = this.getCountryInfo(country.id);
+
+        console.log(`🏳️ País ${country.name} (ID: ${country.id}) - Owner: ${owner ? `Jugador ${owner.player_id}` : 'Sin dueño'} - Color: ${fillColor} - Ejércitos: ${countryData?.country_army || 0}`);
+
+
+        foundElements.forEach(element => {
+
+          if (element && typeof element.setAttribute === 'function') {
+            element.removeAttribute('style');
+
+            element.removeAttribute('style');
+
+
+            element.setAttribute('fill', fillColor);
+
+
+            element.setAttribute('stroke', fillColor);
+            element.setAttribute('stroke-width', '2');
+
+
+            element.setAttribute('stroke-linejoin', 'round');
+            element.setAttribute('stroke-linecap', 'round');
+
+
+            if ((element as any).style) {
+              (element as any).style.cursor = 'pointer';
+            }
+
+
+            const newEl = element.cloneNode(true) as Element;
+            if (element.parentNode) {
+              element.parentNode.replaceChild(newEl, element);
+            }
+
+
+            newEl.addEventListener('click', (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              console.log(`🖱️ Click en ${country.name} (${country.id})`);
+              this.seleccionarPorId(country.id);
+            });
+
+            newEl.addEventListener('mouseenter', () => {
+              if (country.id !== this.selectedCountryId) {
+                const hoverColor = this.getLighterColor(fillColor);
+                newEl.setAttribute('fill', hoverColor);
+              }
+            });
+
+            newEl.addEventListener('mouseleave', () => {
+              if (country.id !== this.selectedCountryId) {
+                newEl.setAttribute('fill', fillColor);
+              }
+            });
+          }
+        });
+
+      }
+
+    });
+
   }
 }
 
