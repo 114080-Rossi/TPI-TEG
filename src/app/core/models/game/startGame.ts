@@ -42,3 +42,8 @@ export interface StartGameDTO {
   gamePlayerDTOList: GamePlayerDTO[];
 }
 
+export interface GameJoinRequestDTO {
+  game_id: number;
+  player_id: number;
+  color_id: number;
+}

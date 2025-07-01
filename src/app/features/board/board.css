@@ -1,44 +1,248 @@
-/* CONTENEDOR PRINCIPAL: dos columnas iguales de altura */
-.board-container {
-  display: flex;
-  justify-content: center;   /* centra horizontalmente el bloque */
-  align-items: stretch;      /* obliga a que map-panel e info-panel tengan igual altura */
-  gap: 1rem;
-  padding: 2rem;
-  background: #043b74;
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
+
+:root {
+  --side-w: clamp(14rem, 18vw, 22rem);
 }
 
-/* PANEL DEL MAPA */
-.map-panel {
-  flex: 1;                   /* ocupa todo lo que quede disponible */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Roboto Condensed', sans-serif;
+  background: #043b74;
+  color: #ffffff;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.board-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: stretch;
+}
+
+/* PANEL IZQUIERDO Y DERECHO */
+.side-panel {
+  flex: 0 0 var(--side-w);
+  max-width: var(--side-w);
+  height: 90vh;
+  padding: 1rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.left-info {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-.map-panel > h2 {
-  text-align: center;
-  margin-bottom: 1rem;
-  color: #fff;
-}
-.map-panel .svg-map {
-  flex: 1;                   /* para que estire verticalmente */
-  width: 100%;
-  height: auto;
-  border: 2px solid #000;
-  border-radius: 4px;
+  text-align: left;
+  justify-content: flex-start;
+  gap: 1.2rem;
+  margin-top: 14rem;
 }
 
-/* PANEL DERECHO QUE IGUALA ALTURA Y ES MÁS FINITO */
-.info-panel {
-  flex: 0 0 300px;           /* ancho fijo de 300px (ajusta a tu gusto) */
+.player-title {
+  margin-top: 2.5rem;
+}
+
+.player-list {
+  list-style: none;
+  padding-left: 0;
   display: flex;
   flex-direction: column;
-  background: rgba(255,255,255,0.1);
-  border: 2px solid #000;
-  border-radius: 4px;
-  padding: 1rem;
+  gap: 0.2rem;
+  margin-top: 0.5rem;
 }
 
-/* El propio componente <app-player-info> puede ocuparse
-   de su contenido; aquí solo aseguras que info-panel
-   ocupe toda la altura del flex padre */
+.player-list li i {
+  margin-right: 0.5rem;
+}
+
+.timer-box {
+  font-size: 1.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* PANEL MAPA */
+.map-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.map-panel h2 {
+  font-size: 4rem;
+  font-weight: 900;
+  text-shadow: 2px 2px 4px #0008;
+}
+
+.map-wrapper {
+  border: none;
+  height: 90vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: #003366;
+}
+
+#svgMap,
+.map-svg {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  pointer-events: auto;
+}
+
+.objective-box {
+  background: #003e72;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  padding: 0.8rem;
+  font-size: 0.9rem;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.action-btn {
+  width: 50%;
+  aspect-ratio: 1 / 1;
+  max-width: calc(var(--side-w) - 1rem);
+  border: 2px solid #ffffff;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.25s;
+}
+
+.action-btn i {
+  font-size: 1.5rem;
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+}
+
+/* PANEL DERECHO: LISTA DE PAÍSES MODERNA */
+.country-list-wrapper {
+  flex-grow: 1;
+  min-height: 200px;
+  max-height: 60vh;
+  overflow-y: auto;
+  overflow-x: auto;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  padding: 0.8rem;
+  margin-top: 1rem;
+}
+
+.country-title {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+.country-row {
+  min-width: 270px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-bottom: 1px solid #1a3568;
+  font-size: 1rem;
+  color: #fff;
+  transition: background 0.2s;
+}
+
+.country-row:last-child {
+  border-bottom: none;
+}
+
+.country-row:hover {
+  background: #2260a1;
+}
+
+.country-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid #fff8;
+  flex-shrink: 0;
+  display: inline-block;
+  background: #aaa; /* fallback color */
+}
+
+.cl-name {
+  flex: 2;
+  font-weight: 500;
+  text-shadow: 1px 1px 2px #0016;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cl-armies {
+  font-weight: bold;
+  color: #ffda44;
+  min-width: 22px;
+  text-align: right;
+  font-size: 1.1em;
+  margin-left: 4px;
+}
+
+.cl-owner {
+  color: #aaf;
+  font-size: 0.93em;
+  font-style: italic;
+  margin-left: 10px;
+  opacity: 0.75;
+}
+
+/* OPCIONAL: resaltar tus propios países */
+.my-country {
+  background: #145f28 !important;
+}
+
+.country-list {
+  scrollbar-width: thin;
+  scrollbar-color: #fff #153d6f;
+}
+
+.action-btn[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(100%);
+  transition: 0.3s ease;
+}

@@ -16,12 +16,14 @@ export class AuthService {
   private BASE_URL = backUrl;
   constructor(private http: HttpClient) {}
 
+  //TODO AGREGARLO EN CADA PETICION
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
       'ngrok-skip-browser-warning': 'true'
     })
   };
+
   /**
    * Envia credenciales al backend para iniciar sesion.
    * @param data Objeto con username y password
