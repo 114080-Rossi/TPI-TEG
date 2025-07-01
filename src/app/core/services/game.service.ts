@@ -4,7 +4,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {backUrl} from '../../../../env';
 import {GameDTO, GameHistory, NewGameRequestDTO, NewGameResponseDTO, PlayerNewDTO} from '../models/game/game.model';
-import {StartGameDTO} from 'app/core/models/game/startGame';
+import {ColorDTO, GameJoinRequestDTO, StartGameDTO} from 'app/core/models/game/startGame';
 
 
 @Injectable({providedIn: 'root'})
@@ -16,6 +16,7 @@ export class GameService {
 
   constructor(private http: HttpClient) {}
 
+  //TODO AGREGARLO EN CADA PETICION
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -70,7 +71,7 @@ export class GameService {
   }
 
   /**
-   * Obtener game por Id
+   * Obtener game por Id.
    */
   getGameById(gameId: number): Observable<GameDTO> {
     return this.http.get<any>(`${this.apiUrl}/${gameId}`, this.httpOptions).pipe(
@@ -84,7 +85,26 @@ export class GameService {
       }))
     );
   }
+  /**
+   * Obtener los colores del game.
+   */
+  getVerifyGame(gameId: number): Observable<ColorDTO[]> {
+    return this.http.get<{ color_list: { color_id: number, color_name: string }[] }>(`${this.apiUrl}/${gameId}/verify`, this.httpOptions).pipe(
+      map(response => (response.color_list ?? []).map(color => ({
+        id: color.color_id,
+        colorName: color.color_name
+      })))
+    );
+  }
 
-
-
+  /**
+   * Post para unirse a la partida.
+   */
+  joinGame(gameId: number, joinRequest: GameJoinRequestDTO): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/${gameId}/join`,
+      joinRequest,
+      { ...this.httpOptions, responseType: 'text' as 'json' }
+    );
+  }
 }
