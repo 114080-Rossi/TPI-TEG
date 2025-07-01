@@ -8,6 +8,7 @@ headers = []
 [[plugins]]
 origin = "default"
 package = "@netlify/angular-runtime"
+pinned_version = "2"
 
 [plugins.inputs]
 
@@ -33,7 +34,7 @@ command = "ng build --configuration production"
 
 [[redirects]]
 from = "/api/*"
-to = "https://79c9-2803-9800-9897-91b5-c814-db61-a259-114a.ngrok-free.app/:splat"
+to = "https://4068-2803-9800-9897-91b5-44f9-3da9-7530-df6d.ngrok-free.app/:splat"
 status = 200.0
 force = true
 
