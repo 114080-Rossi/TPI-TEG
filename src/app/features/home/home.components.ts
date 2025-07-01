@@ -1,10 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule }      from '@angular/common';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {  FormBuilder,  FormGroup,  ReactiveFormsModule,  Validators} from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GameService } from 'app/core/services/game.service';
 import {GameHistory, NewGameRequestDTO} from 'app/core/models/game/game.model';
-import {ColorDTO, GameJoinRequestDTO} from 'app/core/models/game/startGame';
+
+// import { Component } from '@angular/core';
+// import { CommonModule } from '@angular/common';
+// import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+// import {Router} from '@angular/router';
+// import {GameHistory, NewGameRequestDTO} from 'app/core/models/game/game.model';
+
 
 enum Colors {
   RED = 'RED',
@@ -47,7 +53,7 @@ interface GameConfig {
 @Component({
   selector:    'app-home',
   standalone:  true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports:     [ CommonModule, ReactiveFormsModule ],
   templateUrl: './home.component.html',
   styleUrls:   ['./home.component.css'],
 })
@@ -60,25 +66,6 @@ export class HomeComponent implements OnInit {
   joinGameId: number | null = null;
   showJoinGameForm = false;
   playerId: number| null = null;
-  availableGames: ColorDTO[] = [];
-  selectedColorId: number | null = null;
-
-
-  onVerifyGameId(id: number | null) {
-    if (id === null) return;
-    this.gameService.getVerifyGame(id).subscribe({
-      next: (colors) => {
-        this.availableGames = Array.isArray(colors) ? colors : [];
-      },
-      error: (err) => {
-        console.error('Error cargando colores', err);
-        this.availableGames = [];
-      }
-    });
-  }
-
-
-  swords = Array.from({ length: 14 });
 
   colorOptions = [
     { value: "RED",    label: "RED" },
@@ -143,23 +130,9 @@ export class HomeComponent implements OnInit {
   }
 
 
-  onJoinToGame(gameId: number | null, colorId: number | null): void {
-    if (gameId === null || colorId === null || this.playerId === null) return;
-
-    const joinRequest: GameJoinRequestDTO = {
-      game_id: gameId,
-      player_id: this.playerId,
-      color_id: colorId
-    };
-
-    this.gameService.joinGame(gameId, joinRequest).subscribe({
-      next: () => {
-        this.router.navigate(['/waiting-room', gameId, this.playerId]); //, colorId
-      },
-      error: err => {
-        console.error('Error al unirse al juego', err);
-      }
-    });
+  onJoinToGame(gameId: number): void {
+    // ahora pasamos también playerId
+    this.router.navigate(['/board', gameId, this.playerId]);
   }
 
   onStartNewGame(): void {
@@ -203,6 +176,21 @@ export class HomeComponent implements OnInit {
         } else {
           console.error('gameId es undefined o null en la respuesta');
         }
+// =======
+
+//     const dto: NewGameRequestDTO = {
+//       created_by_player_id: this.playerId,
+//       amount_bot:           botCount,
+//       game_difficulty:      difficultyMap[difficulty],
+//       color_id:             colorMap[color]
+//     };
+
+//     this.gameService.createNewGame(dto).subscribe({
+//       next: response => {
+//         // ajusta si tu DTO usa snake_case o camelCase:
+//         const gameId = (response as any).gameId ?? (response as any).game_id;
+//         this.router.navigate(['/board', gameId, this.playerId]);  // <-- ambos IDs
+// >>>>>>> weekNine
       },
       error: err => console.error('Error al crear el juego', err)
     });

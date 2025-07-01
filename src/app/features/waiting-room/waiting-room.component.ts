@@ -14,7 +14,7 @@ import {StartGameDTO} from 'app/core/models/game/startGame';
 export class WaitingRoomComponent implements OnInit {
   gameId: number | null = null;
   playerId: number| null = null;
-  private refreshInterval: any
+
   @Input() gameData: any | GameDTO;
 
   constructor(
@@ -37,20 +37,8 @@ export class WaitingRoomComponent implements OnInit {
       const param = this.route.snapshot.paramMap.get('id');
       this.playerId = param != null ? Number(param) : null;
 
-
       this.loadWaitingRoomData();
-
-      // Refresca cada 3 segundos
-      this.refreshInterval = setInterval(() => {
-        this.loadWaitingRoomData();
-      }, 3000);
     });
-  }
-
-  ngOnDestroy(): void {
-    if (this.refreshInterval) {
-      clearInterval(this.refreshInterval);
-    }
   }
 
   cancelGame(): void {

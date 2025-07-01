@@ -1,38 +1,42 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CountryDTO } from 'app/core/models/board.models/country-dto';
-import { Assignment } from 'app/core/models/assignments/assignment.model';
+import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import {Assignment} from 'app/core/models/assignments/assignment.model';
 
 @Component({
   selector: 'app-distribute-armies-modal',
-  templateUrl: './distribute-armies-modal.component.html',
-  styleUrls: ['./distribute-armies-modal.component.css'],
   imports: [
-    CommonModule,
-    FormsModule
+    NgIf,
+    FormsModule,
+    NgForOf,
+    NgOptimizedImage
   ],
-  standalone: true
+  templateUrl: './distribute-armies-modal.component.html',
+  styleUrl: './distribute-armies-modal.component.css'
 })
-
 export class DistributeArmiesModalComponent {
   @Input() open: boolean = false;
   @Input() countries: CountryDTO[] = [];
-  @Input() armiesLeft: number = 0;
-
+  @Input() totalArmies: number = 0; // ¿Cuántos debe repartir el jugador?
   @Output() close = new EventEmitter<void>();
-  @Output() confirm = new EventEmitter<Assignment[]>();
+  @Output() confirm = new EventEmitter<Assignment[]>(); // Devuelve la lista final
 
   selectedCountryId: number | null = null;
   assignedArmies: number = 1;
+
+  // Acumulado de asignaciones
   assignments: Assignment[] = [];
 
-  ngOnChanges() {
-    if (this.open) {
-      this.selectedCountryId = null;
-      this.assignedArmies = 1;
-      this.assignments = [];
-    }
+  get armiesLeft(): number {
+    const used = this.assignments.reduce((sum, a) => sum + a.armies, 0);
+    return this.totalArmies - used;
+  }
+
+  get myAvailableCountries(): CountryDTO[] {
+    // Filtra solo países del jugador (si tienes ownerId) o todos los tuyos
+    // return this.countries.filter(c => c.ownerId === this.playerId);
+    return this.countries;
   }
 
   assign() {
@@ -40,6 +44,7 @@ export class DistributeArmiesModalComponent {
     const country = this.countries.find(c => c.id === this.selectedCountryId);
     if (!country) return;
 
+    // Suma a lo ya asignado si el país ya tiene asignaciones
     const existing = this.assignments.find(a => a.countryId === country.id);
     if (existing) {
       existing.armies += this.assignedArmies;
@@ -50,6 +55,7 @@ export class DistributeArmiesModalComponent {
         armies: this.assignedArmies
       });
     }
+    // Limpiar campos
     this.selectedCountryId = null;
     this.assignedArmies = 1;
   }
@@ -59,13 +65,21 @@ export class DistributeArmiesModalComponent {
   }
 
   onConfirm() {
-    const totalAssigned = this.assignments.reduce((sum, a) => sum + a.armies, 0);
-    if (totalAssigned === 0) return;
-    this.confirm.emit(this.assignments);
-    this.close.emit();
+    if (this.armiesLeft === 0) {
+      this.confirm.emit(this.assignments);
+      this.reset();
+      this.close.emit();
+    }
   }
 
   onClose() {
+    this.reset();
     this.close.emit();
+  }
+
+  reset() {
+    this.selectedCountryId = null;
+    this.assignedArmies = 1;
+    this.assignments = [];
   }
 }

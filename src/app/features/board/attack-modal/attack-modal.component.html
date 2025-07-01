@@ -1,39 +1,23 @@
-<div class="modal-overlay" *ngIf="open" (click)="onClose()">
-  <div class="modal-window" (click)="$event.stopPropagation()">
-
-    <img ngSrc="assets/images/sword.png"
-         alt="Attack"
-         class="modal-hero"
-         height="1024" width="1024">
-
-    <h3>Attack</h3>
-
-    <label>From:</label>
+<div class="modal" *ngIf="open">
+  <div class="modal-content">
+    <img ngSrc="assets/images/sword.png" alt="Atacar" class="modal-hero" height="1024" width="1024">
+    <h3>Atacar</h3>
+    <label>Desde:</label>
     <select [(ngModel)]="fromCountryId">
-      <option [ngValue]="null" disabled selected>Select origin</option>
-      <option *ngFor="let c of countries" [ngValue]="c.id">{{ c.name }}</option>
+      <option [ngValue]="null" disabled selected>Elige país de origen</option>
+      <option *ngFor="let c of countries" [ngValue]="c.id">{{c.name}}</option>
     </select>
-
-    <label>To:</label>
+    <label>A:</label>
     <select [(ngModel)]="toCountryId" [disabled]="!fromCountryId">
-      <option [ngValue]="null" disabled selected>Select target</option>
-      <option *ngFor="let c of attackableCountries" [ngValue]="c.id">{{ c.name }}</option>
+      <option [ngValue]="null" disabled selected>Elige país a atacar</option>
+      <option *ngFor="let c of attackableCountries" [ngValue]="c.id">{{c.name}}</option>
     </select>
-
-    <label>Dice (max: {{ maxDice }}):</label>
-    <input type="number"
-           [(ngModel)]="armies"
-           [min]="1"
-           [max]="maxDice"
-           [disabled]="!fromCountryId"
-    />
-
-    <div class="modal-btn-row">
-      <button class="modal-btn primary"
-              (click)="onConfirm()"
-              [disabled]="!isValidAttack()"
-      >Confirm</button>
-      <button class="modal-btn" (click)="onClose()">Cancel</button>
+    <label>Ejércitos:</label>
+    <input type="number" [(ngModel)]="armies" min="1" [max]="10" />
+    <div class="buttons">
+      <button (click)="onConfirm()">Confirmar</button>
+      <button (click)="onClose()">Cancelar</button>
     </div>
   </div>
 </div>
+

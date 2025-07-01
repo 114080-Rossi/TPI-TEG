@@ -1,39 +1,32 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<div class="sword-column left">
-  <div *ngFor="let _ of swords">⚔</div>
-</div>
-<div class="sword-column right">
-  <div *ngFor="let _ of swords">⚔</div>
-</div>
-
 <div class="game-menu-container">
   <div class="header">
-    <h1>Ready To Play?</h1>
+    <h1>New GAME</h1>
   </div>
 
   <!-- Botones principales -->
-  <div class="main-buttons"
-       *ngIf="!showNewGameForm && !showLoadGameList && !showJoinGameForm">
-
-    <button class="btn" (click)="onNewGame()">
-      <i class="fa-solid fa-plus"></i>
+  <div class="main-buttons" *ngIf="!showNewGameForm && !showLoadGameList && !showJoinGameForm">
+    <button
+      class="btn btn-primary btn-large"
+      (click)="onNewGame()">
+      <i class="icon-plus"></i>
       New Game
     </button>
 
-    <button class="btn" (click)="onLoadGame()">
-      <i class="fa-solid fa-rotate-right"></i>
+    <button
+      class="btn btn-secondary btn-large"
+      (click)="onLoadGame()">
+      <i class="icon-folder"></i>
       Load Game
     </button>
 
-    <button class="btn" (click)="onJoinGame()">
-      <i class="fa-solid fa-users"></i>
+    <button
+      class="btn btn-secondary btn-large"
+      (click)="onJoinGame()">
+      <i class="icon-plus"></i>
       Join Game
     </button>
 
   </div>
-
-
 
   <!-- Formulario para nuevo juego -->
   <div class="new-game-form" *ngIf="showNewGameForm">
@@ -115,49 +108,14 @@
   <!-- Formulario para el join game -->
   <div class="join-game-form" *ngIf="showJoinGameForm">
     <h2>Join Game</h2>
-    <form>
-      <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
-        <label for="gameIdInput" style="margin-bottom: 0;">ID del juego:</label>
-        <input
-          id="gameIdInput"
-          type="number"
-          class="form-control"
-          [(ngModel)]="joinGameId"
-          name="gameIdInput"
-          placeholder="Ingrese el ID del juego"
-          style="flex: 1 1 auto; margin-right: 8px;" />
-        <button
-          type="button"
-          class="btn btn-info"
-          (click)="onVerifyGameId(joinGameId)"
-          [disabled]="!joinGameId">
-          Verificar
-        </button>
-      </div>
-      <div class="form-group">
-        <label for="gameIdSelect">Seleccione algun color disponible:</label>
-        <select
-          id="gameIdSelect"
-          class="form-control"
-          [(ngModel)]="selectedColorId"
-          name="gameIdSelect">
-          <option [ngValue]="null">Seleccione un color</option>
-          <option *ngFor="let game of availableGames" [ngValue]="game.id">
-            {{ game.id }} - {{ game.colorName }}
-          </option>
-        </select>
-      </div>
-      <button
-        class="btn btn-success"
-        (click)="selectedColorId !== null && onJoinToGame(joinGameId, selectedColorId)"
-        [disabled]="!joinGameId || !selectedColorId">
-        Unirse
-      </button>
-      <button
-        class="btn btn-cancel"
-        (click)="onCloseJoinGame()"
-        type="button">Cerrar</button>
-    </form>
+    <div *ngIf="joinGameId !== null; else loading">
+      <p>ID del juego para unirse: <strong>{{ joinGameId }}</strong></p>
+      <button class="btn btn-success" (click)="onJoinToGame(joinGameId)">Unirse</button>
+      <button class="btn btn-cancel" (click)="onCloseJoinGame()">Cerrar</button>
+    </div>
+    <ng-template #loading>
+      <p>Cargando ID del juego...</p>
+    </ng-template>
   </div>
 
   <!-- Lista de juegos guardados -->
@@ -214,4 +172,5 @@
         <p>No hay juegos guardados</p>
       </div>
     </ng-template>
+
 </div>
