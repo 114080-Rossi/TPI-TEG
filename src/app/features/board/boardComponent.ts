@@ -76,7 +76,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
   objective: string = '';
   attackResult: AttackResultDTO | null = null;
   playersdto: SimplePlayer[] = [];
-  refreshSubscription?: Subscription;
+
 
   modalDistributeOpen = false;
   armiesLeft = 10; //HAY QUE PONERLE LOS EJERCITOS QUE CORRESPONDEN A LA RONDA
@@ -101,8 +101,6 @@ export class BoardComponent implements OnInit, AfterViewInit {
       return;
     }
 
-
-    /*
     this.boardService.getFullGameStateAsAny(this.gameId!).subscribe((updatedGame) => {
       this.game = updatedGame;
       this.countries = Array.isArray(updatedGame.countries) ? updatedGame.countries : [];
@@ -141,7 +139,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
 
       console.log('✅ Estado inicial cargado:', updatedGame);
       console.log('🏳️‍myCountries:', this.myCountries);
-    });*/
+    });
   }
 
   playSound(file: string, duration?: number) {
@@ -685,12 +683,6 @@ export class BoardComponent implements OnInit, AfterViewInit {
 
     this.miniPintarMapa();
   }
-
-  private refreshGameState(): void {
-    this.boardService.getFullGameStateAsAny(this.gameId!).subscribe((updatedGame) => {
-    });
-  }
-
 
   private miniPintarMapa(): void{
     setTimeout(() => {
