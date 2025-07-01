@@ -102,6 +102,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
     }
 
 
+    /*
     this.boardService.getFullGameStateAsAny(this.gameId!).subscribe((updatedGame) => {
       this.game = updatedGame;
       this.countries = Array.isArray(updatedGame.countries) ? updatedGame.countries : [];
@@ -140,7 +141,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
 
       console.log('✅ Estado inicial cargado:', updatedGame);
       console.log('🏳️‍myCountries:', this.myCountries);
-    });
+    });*/
   }
 
   playSound(file: string, duration?: number) {
